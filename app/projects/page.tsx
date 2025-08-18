@@ -4,19 +4,31 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ExternalLink, Github, Play } from 'lucide-react'
 import AnimatedSection from '@/components/AnimatedSection'
-import { useTheme } from '../layout'
+import { useTheme } from '@/components/ThemeProvider'
+
+type GitHubRepo = {
+	id: number
+	name: string
+	html_url: string
+	homepage?: string | null
+	topics?: string[]
+	language?: string | null
+	description?: string | null
+	updated_at: string
+	stargazers_count: number
+}
 
 export default function ProjectsPage() {
   const { isDark } = useTheme()
   const [selectedCategory, setSelectedCategory] = useState('All')
-  const [githubRepos, setGithubRepos] = useState([])
+  const [githubRepos, setGithubRepos] = useState<GitHubRepo[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchGitHubRepos = async () => {
       try {
         const response = await fetch('https://api.github.com/users/maazabdulbasith/repos?sort=updated&per_page=20')
-        const repos = await response.json()
+        const repos: GitHubRepo[] = await response.json()
         setGithubRepos(repos)
         setLoading(false)
       } catch (error) {
@@ -30,9 +42,9 @@ export default function ProjectsPage() {
 
   const categories = ['All', 'Frontend', 'Backend', 'Full Stack', 'Mobile']
 
-  const getProjectCategory = (repo) => {
+  const getProjectCategory = (repo: GitHubRepo) => {
     const topics = repo.topics || []
-    const language = repo.language?.toLowerCase() || ''
+    const language = (repo.language || '').toLowerCase()
     
     if (topics.includes('fullstack') || topics.includes('full-stack')) return 'Full Stack'
     if (topics.includes('frontend') || language.includes('javascript') || language.includes('typescript')) return 'Frontend'
@@ -44,7 +56,7 @@ export default function ProjectsPage() {
 
   const filteredProjects = selectedCategory === 'All' 
     ? githubRepos 
-    : githubRepos.filter(repo => getProjectCategory(repo) === selectedCategory)
+    : githubRepos.filter((repo) => getProjectCategory(repo) === selectedCategory)
 
   return (
     <div className="min-h-screen">

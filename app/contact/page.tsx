@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle, Github, Linkedin, MessageCircle } from 'lucide-react'
-import { useTheme } from '../layout'
+import { useTheme } from '@/components/ThemeProvider'
 
 interface FormData {
   name: string

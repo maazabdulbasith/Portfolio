@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, useScroll } from 'framer-motion'
 import { Github, Linkedin, Mail, ChevronDown, ArrowDown, ArrowUp } from 'lucide-react'
-import { useTheme } from './layout'
+import { useTheme } from '@/components/ThemeProvider'
 
 export default function ScrollingPage() {
   const { isDark } = useTheme()

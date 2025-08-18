@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Sun, Moon, Home, User, FolderOpen, BarChart3, Calendar, MessageCircle, HelpCircle, MapPin, TrendingUp, PieChart, Activity } from 'lucide-react'
 import Link from 'next/link'
-import { useTheme } from '@/app/layout'
+import { useTheme } from '@/components/ThemeProvider'
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
