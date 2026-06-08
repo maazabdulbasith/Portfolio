@@ -117,7 +117,7 @@ function StatCard({
           <p className="text-[10px] font-semibold tracking-[2px] uppercase text-txt-tertiary mb-1.5">
             {label}
           </p>
-          <p className="text-lg md:text-xl font-semibold text-txt-primary truncate">
+          <p className="text-base md:text-lg font-semibold text-txt-primary leading-snug">
             {value ?? '—'}
           </p>
         </>
