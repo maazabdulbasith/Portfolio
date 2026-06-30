@@ -1,7 +1,6 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import SectionHeader from './SectionHeader'
 
 interface Project {
   name: string
@@ -57,60 +56,54 @@ const cardVariant = {
 
 export default function Projects() {
   return (
-    <section id="projects" className="py-24 md:py-32 border-t border-surface-3">
-      <div className="max-w-[1100px] mx-auto px-5 md:px-10">
-        <SectionHeader number="03" label="Projects" title="What I've built" />
-
-        <div className="space-y-0">
-          {PROJECTS.map((project, i) => (
-            <div key={project.name}>
-              {i > 0 && <hr className="border-t border-surface-3 my-0" />}
-              <motion.div
-                custom={i}
-                variants={cardVariant}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: '-60px' }}
-                className="accent-border-card py-7"
-              >
-                {/* Header */}
-                <div className="flex flex-wrap items-center gap-2.5 mb-1.5">
-                  <span className="text-[17px] font-semibold text-txt-primary">
-                    {project.name}
-                  </span>
-                  {project.badge && (
-                    <span
-                      className={`callout-badge text-[10px] ${
-                        project.badgeType === 'blue' ? 'blue' : ''
-                      }`}
-                    >
-                      {project.badge}
-                    </span>
-                  )}
-                </div>
-
-                <p className="text-xs text-txt-tertiary tracking-wide mb-3.5">
-                  {project.tech}
-                </p>
-
-                <ul className="space-y-2">
-                  {project.bullets.map((bullet, j) => (
-                    <li
-                      key={j}
-                      className="relative pl-5 text-[13px] text-txt-secondary leading-[1.75]"
-                    >
-                      <span className="absolute left-0 text-txt-tertiary">
-                        —
-                      </span>
-                      {bullet}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
+    <div className="space-y-0">
+      {PROJECTS.map((project, i) => (
+        <div key={project.name}>
+          {i > 0 && <hr className="border-t border-surface-3 my-0" />}
+          <motion.div
+            custom={i}
+            variants={cardVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-60px' }}
+            className="accent-border-card py-7"
+          >
+            {/* Header */}
+            <div className="flex flex-wrap items-center gap-2.5 mb-1.5">
+              <span className="text-[17px] font-semibold text-txt-primary">
+                {project.name}
+              </span>
+              {project.badge && (
+                <span
+                  className={`callout-badge text-[10px] ${
+                    project.badgeType === 'blue' ? 'blue' : ''
+                  }`}
+                >
+                  {project.badge}
+                </span>
+              )}
             </div>
-          ))}
+
+            <p className="text-xs text-txt-tertiary tracking-wide mb-3.5">
+              {project.tech}
+            </p>
+
+            <ul className="space-y-2">
+              {project.bullets.map((bullet, j) => (
+                <li
+                  key={j}
+                  className="relative pl-5 text-[13px] text-txt-secondary leading-[1.75]"
+                >
+                  <span className="absolute left-0 text-txt-tertiary">
+                    —
+                  </span>
+                  {bullet}
+                </li>
+              ))}
+            </ul>
+          </motion.div>
         </div>
-      </div>
-    </section>
+      ))}
+    </div>
   )
 }

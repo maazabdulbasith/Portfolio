@@ -1,7 +1,6 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import SectionHeader from './SectionHeader'
 
 interface ExperienceItem {
   role: string
@@ -47,13 +46,13 @@ const EXPERIENCE: ExperienceItem[] = [
 ]
 
 const cardVariant = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 15 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
     transition: {
-      delay: i * 0.1,
-      duration: 0.6,
+      delay: i * 0.08,
+      duration: 0.5,
       ease: [0.16, 1, 0.3, 1],
     },
   }),
@@ -61,68 +60,62 @@ const cardVariant = {
 
 export default function Experience() {
   return (
-    <section id="work" className="py-24 md:py-32 border-t border-surface-3">
-      <div className="max-w-[1100px] mx-auto px-5 md:px-10">
-        <SectionHeader number="02" label="Experience" title="Where I've worked" />
+    <div className="space-y-12">
+      {EXPERIENCE.map((exp, i) => (
+        <motion.div
+          key={exp.role + exp.company}
+          custom={i}
+          variants={cardVariant}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-60px' }}
+          className="accent-border-card relative py-6"
+        >
+          <div className="timeline-dot" />
 
-        <div className="space-y-12">
-          {EXPERIENCE.map((exp, i) => (
-            <motion.div
-              key={exp.role + exp.company}
-              custom={i}
-              variants={cardVariant}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-60px' }}
-              className="accent-border-card relative py-6"
-            >
-              <div className="timeline-dot" />
+          {/* Header */}
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1">
+            <span className="text-lg font-semibold text-txt-primary">
+              {exp.role}
+            </span>
+            <span className="text-sm font-medium text-accent">
+              {exp.company}
+            </span>
+          </div>
+          <p className="text-xs text-txt-tertiary tracking-wider mb-4">
+            {exp.date}
+          </p>
 
-              {/* Header */}
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1">
-                <span className="text-lg font-semibold text-txt-primary">
-                  {exp.role}
-                </span>
-                <span className="text-sm font-medium text-accent">
-                  {exp.company}
-                </span>
-              </div>
-              <p className="text-xs text-txt-tertiary tracking-wider mb-4">
-                {exp.date}
-              </p>
-
-              {/* Bullets */}
-              <ul className="space-y-2.5">
-                {exp.bullets.map((bullet, j) => {
-                  const isObj = typeof bullet === 'object'
-                  return (
-                    <li
-                      key={j}
-                      className="relative pl-5 text-[13px] text-txt-secondary leading-[1.75]"
-                    >
-                      <span className="absolute left-0 text-txt-tertiary">
-                        —
-                      </span>
-                      {isObj ? (
-                        <>
-                          {bullet.text}
-                          {bullet.callout && (
-                            <span className="callout-badge ml-2 text-[10px]">
-                              {bullet.callout}
-                            </span>
-                          )}
-                        </>
-                      ) : (
-                        bullet
+          {/* Bullets */}
+          <ul className="space-y-2.5">
+            {exp.bullets.map((bullet, j) => {
+              const isObj = typeof bullet === 'object'
+              return (
+                <li
+                  key={j}
+                  className="relative pl-5 text-[13px] text-txt-secondary leading-[1.75]"
+                >
+                  <span className="absolute left-0 text-txt-tertiary">
+                    —
+                  </span>
+                  {isObj ? (
+                    <>
+                      {bullet.text}
+                      {bullet.callout && (
+                        <span className="callout-badge ml-2 text-[10px]">
+                          {bullet.callout}
+                        </span>
                       )}
-                    </li>
-                  )
-                })}
-              </ul>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
+                    </>
+                  ) : (
+                    bullet
+                  )}
+                </li>
+              )
+            })}
+          </ul>
+        </motion.div>
+      ))}
+    </div>
   )
 }

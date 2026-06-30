@@ -63,7 +63,7 @@ export default function Hero() {
   )
 
   return (
-    <section id="hero" className="min-h-screen flex items-center pt-14">
+    <section id="hero" className="py-20 md:py-28 flex items-center pt-24 md:pt-32 relative">
       <div className="w-full max-w-[1100px] mx-auto px-5 md:px-10">
         <motion.div
           variants={container}
@@ -109,21 +109,24 @@ export default function Hero() {
             <span className="text-surface-4 hidden md:inline">·</span>
             <a href="https://linkedin.com/in/abdul-basith-maaz" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors">linkedin.com/in/abdul-basith-maaz</a>
           </motion.div>
-        </motion.div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-txt-tertiary"
-        >
-          <span className="text-[10px] tracking-[2px] uppercase">Scroll</span>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="w-px h-10 bg-gradient-to-b from-accent to-transparent"
-          />
+          {/* CTA Buttons */}
+          <motion.div variants={item} className="pt-10 flex gap-4">
+            <a
+              href="/AbdulBasithMaaz_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[11px] font-semibold tracking-[2px] uppercase text-bg bg-accent border border-accent hover:bg-transparent hover:text-accent px-6 py-3.5 rounded transition-all duration-300"
+            >
+              View Resume
+            </a>
+            <a
+              href="#work"
+              className="text-[11px] font-semibold tracking-[2px] uppercase text-txt-primary border border-surface-3 hover:border-accent px-6 py-3.5 rounded transition-all duration-300"
+            >
+              See My Work
+            </a>
+          </motion.div>
         </motion.div>
       </div>
     </section>

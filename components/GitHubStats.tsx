@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 const GitHubCalendar = dynamic(() => import('react-github-calendar').then((mod) => mod.GitHubCalendar), { ssr: false })
-import SectionHeader from './SectionHeader'
 
 /* ────── Types ────── */
 interface RepoData {
@@ -137,41 +136,37 @@ export default function GitHubStats() {
   }
 
   return (
-    <section className="py-24 md:py-32 border-t border-surface-3">
-      <div className="max-w-[1100px] mx-auto px-5 md:px-10">
-        <SectionHeader number="05" label="Activity" title="GitHub" />
-
-        {/* Stat cards */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-10">
-          <StatCard label="Repositories" value={stats.repoCount} loading={stats.loading} delay={0} />
-          <StatCard label="Top Languages" value={stats.topLanguages} loading={stats.loading} delay={0.08} />
-          <StatCard label="Latest Tech" value={stats.latestTech} loading={stats.loading} delay={0.16} />
-        </div>
-
-        {/* Contribution heatmap */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-          className="glass-card p-5 md:p-6 overflow-x-auto [&_article]:!text-txt-primary"
-        >
-          <p className="text-[10px] font-semibold tracking-[2px] uppercase text-txt-tertiary mb-4">
-            Contribution Activity
-          </p>
-
-          <div className="flex justify-center min-h-[140px] text-txt-primary">
-            <GitHubCalendar 
-              username={username} 
-              theme={explicitTheme}
-              colorScheme="dark"
-              blockSize={11}
-              blockMargin={4}
-              fontSize={12}
-            />
-          </div>
-        </motion.div>
+    <div>
+      {/* Stat cards */}
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-10">
+        <StatCard label="Repositories" value={stats.repoCount} loading={stats.loading} delay={0} />
+        <StatCard label="Top Languages" value={stats.topLanguages} loading={stats.loading} delay={0.08} />
+        <StatCard label="Latest Tech" value={stats.latestTech} loading={stats.loading} delay={0.16} />
       </div>
-    </section>
+
+      {/* Contribution heatmap */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.2, duration: 0.6 }}
+        className="glass-card p-5 md:p-6 overflow-x-auto [&_article]:!text-txt-primary"
+      >
+        <p className="text-[10px] font-semibold tracking-[2px] uppercase text-txt-tertiary mb-4">
+          Contribution Activity
+        </p>
+
+        <div className="flex justify-center min-h-[140px] text-txt-primary">
+          <GitHubCalendar 
+            username={username} 
+            theme={explicitTheme}
+            colorScheme="dark"
+            blockSize={11}
+            blockMargin={4}
+            fontSize={12}
+          />
+        </div>
+      </motion.div>
+    </div>
   )
 }
