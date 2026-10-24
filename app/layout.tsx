@@ -11,22 +11,27 @@ const jetbrains = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Abdul Basith Maaz — Full Stack Developer',
+  title: 'Abdul Basith Maaz — Backend Software Engineer',
   description:
-    'Backend-focused Full Stack Developer with production ownership across multiple SaaS products. Production ownership. Zero hand-holding.',
+    'Backend-focused Software Engineer with production ownership across five SaaS products, including a FastAPI platform serving 50K+ users. Django, FastAPI, PostgreSQL, Redis, GCP.',
   keywords: [
-    'Full Stack Developer',
-    'Backend Developer',
+    'Backend Engineer',
+    'Software Development Engineer',
     'Python',
     'Django',
     'FastAPI',
+    'PostgreSQL',
+    'Redis',
+    'GCP',
     'React',
+    'Next.js',
     'Portfolio',
     'Abdul Basith Maaz',
   ],
   openGraph: {
-    title: 'Abdul Basith Maaz — Full Stack Developer',
-    description: 'Production ownership. Zero hand-holding.',
+    title: 'Abdul Basith Maaz — Backend Software Engineer',
+    description:
+      '50K+ users. Five SaaS products. Zero downtime. Django, FastAPI, PostgreSQL, Redis, GCP.',
     type: 'website',
   },
 }

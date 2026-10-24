@@ -56,7 +56,7 @@ const item = {
 
 export default function Hero() {
   const typedText = useTypewriter(
-    ['Full Stack Developer', 'Backend Engineer', 'Product Builder'],
+    ['Backend Engineer', 'Software Development Engineer', 'Full Stack Developer'],
     70,
     35,
     2400
@@ -93,7 +93,7 @@ export default function Hero() {
             variants={item}
             className="text-sm md:text-base font-medium text-accent tracking-wide pt-2"
           >
-            Production ownership. Zero hand-holding.
+            50K+ users. Five SaaS products. Zero downtime.
           </motion.p>
 
           {/* Contact links */}

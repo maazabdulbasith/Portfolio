@@ -12,31 +12,34 @@ interface Project {
 
 const PROJECTS: Project[] = [
   {
-    name: 'complia.in',
+    name: 'AI Mock Interview Platform',
+    badge: 'Latest',
+    badgeType: 'blue',
+    tech: 'Next.js · MediaPipe · Whisper · Parakeet · Gemini',
+    bullets: [
+      'Built video and audio pipelines that extract facial and pose signals and generate structured interview feedback using Gemini.',
+      'Moved MediaPipe processing from server to browser, reducing processing time from approximately 60 seconds to 5–6 seconds while lowering server load and bandwidth usage.',
+      'Integrated Whisper and Parakeet transcription and added Redis caching, reducing repeated pipeline-loading time by 50%.',
+    ],
+  },
+  {
+    name: 'Complia.in',
     badge: 'Launched — 50+ Users',
     badgeType: 'amber',
     tech: 'Python · Django · React · Azure OCR · Tesseract',
     bullets: [
-      'Compliance notice parsing platform — built, launched, and grew to 50+ users; shut down after assessing long-term viability in the Indian market.',
+      'Built and launched a compliance-notice parsing platform that acquired 50+ users, combining Azure OCR and Tesseract with a Django and React workflow.',
       'Document ingestion pipeline using Azure OCR with Tesseract fallback for structured data extraction from regulatory notices.',
     ],
   },
   {
-    name: 'translay.in',
+    name: 'Translay.in',
     badge: 'In Development',
     badgeType: 'blue',
     tech: 'Python · Django · React · DeepL API',
     bullets: [
-      'Real-time on-screen translation product that instantly renders anything on screen into a target language — built for consuming foreign-language web and social media content.',
+      'Real-time on-screen translation product that renders on-screen content into a target language for foreign-language web and social media consumption.',
       'Sole developer; architected a low-latency screen capture and overlay pipeline with DeepL API integration.',
-    ],
-  },
-  {
-    name: 'AetherNet',
-    badge: '',
-    tech: 'React · Express · Node.js · TypeScript · Docker',
-    bullets: [
-      'Multi-AI chat app with simultaneous model interaction and side-by-side response comparison for evaluating AI outputs.',
     ],
   },
 ]

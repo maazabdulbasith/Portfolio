@@ -6,33 +6,38 @@ interface ExperienceItem {
   role: string
   company: string
   date: string
+  location?: string
+  previousRole?: string
+  previousDate?: string
   bullets: (string | { text: string; callout?: string })[]
 }
 
 const EXPERIENCE: ExperienceItem[] = [
   {
-    role: 'Backend Developer',
-    company: 'Bottrion Systems Pvt Ltd',
-    date: 'August 2025 – Present',
+    role: 'Software Development Engineer',
+    company: 'Bottrion Systems Pvt. Ltd.',
+    date: 'Sep 2026 – Present',
+    location: 'Bengaluru, India',
+    previousRole: 'Junior Full Stack Engineer',
+    previousDate: 'Aug 2025 – Aug 2026',
     bullets: [
-      'End-to-end backend ownership across 5 production products (Khayyal, Anan, Waddi, Hawiya, Falcon) — API development, production debugging, deployment troubleshooting, and operational support.',
       {
-        text: 'Took sole ownership of Khayyal',
+        text: 'Took sole backend ownership of Khayyal, a KSA SaaS platform serving 50K+ users; reverse-engineered and documented its FastAPI architecture after an engineer transition while maintaining zero downtime.',
         callout: '50k+ users · KSA',
       },
-      'Reverse-engineered and documented a deliberately obfuscated, zero-documentation FastAPI codebase, restoring full engineering visibility and maintaining service continuity.',
-      'Acquired direct Linux server access for production incident response — log analysis, database state validation, service monitoring — significantly reducing turnaround time.',
-      'Maintained Dhamen Pay and STC Pay payment workflows and webhook pipelines; resolved a 2am production incident where 25+ transactions were misclassified as unpaid — traced the root cause to abandoned checkouts and implemented validation to prevent recurrence.',
-      'Resolved recurring Nginx and SSL failures, provisioned isolated development servers for products previously tested on production, and established end-to-end CI/CD pipelines and deployment scripts across the stack.',
-      'Leading an ongoing FastAPI-to-Django migration for Khayyal across 131 endpoints, the company\'s primary revenue-generating product.',
+      'Independently designed, built, and launched Waddi\'s client-facing CRM using React, TypeScript, Django REST Framework, and PostgreSQL.',
+      'Fixed abandoned-checkout payment-state defects across Razorpay, STC Pay, and Dhamen Pay that falsely marked 25+ transactions unpaid per incident; added pytest regression tests to prevent recurrence.',
+      'Optimized OpenAPI schema generation with Redis-backed caching, reducing Swagger documentation load time from 5–10 seconds to under one second.',
+      'Leading the zero-downtime migration of 131 endpoints from FastAPI to Django, using API versioning to preserve existing client integrations.',
+      'Owned CI/CD and GCP deployments across five SaaS products; standardized Linux log-triage workflows, reducing incident diagnosis from hours to minutes.',
     ],
   },
   {
-    role: 'AI-DevOps Intern',
-    company: 'IBM & Rooman Technologies Pvt Ltd',
-    date: 'Sept 2024 – Mar 2025',
+    role: 'AI/DevOps Intern',
+    company: 'IBM & Rooman Technologies Pvt. Ltd.',
+    date: 'Sep 2024 – Mar 2025',
     bullets: [
-      'Implemented CI/CD pipelines (Jenkins, Docker) and configured containerised environments, reducing deployment setup overhead for a 4-person team.',
+      'Implemented Jenkins CI/CD pipelines and Docker-based environments, reducing deployment setup overhead for a four-person development team.',
     ],
   },
   {
@@ -81,10 +86,22 @@ export default function Experience() {
             <span className="text-sm font-medium text-accent">
               {exp.company}
             </span>
+            {exp.location && (
+              <span className="text-xs text-txt-tertiary">{exp.location}</span>
+            )}
           </div>
-          <p className="text-xs text-txt-tertiary tracking-wider mb-4">
+          <p
+            className={`text-xs text-txt-tertiary tracking-wider ${
+              exp.previousRole ? 'mb-1' : 'mb-4'
+            }`}
+          >
             {exp.date}
           </p>
+          {exp.previousRole && exp.previousDate && (
+            <p className="text-xs text-txt-tertiary tracking-wider mb-4">
+              Previously {exp.previousRole} · {exp.previousDate}
+            </p>
+          )}
 
           {/* Bullets */}
           <ul className="space-y-2.5">

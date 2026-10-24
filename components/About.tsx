@@ -12,33 +12,53 @@ const SKILL_GROUPS: SkillGroup[] = [
     label: 'Backend',
     skills: [
       'Python',
-      'FastAPI',
       'Django',
-      'REST Framework',
-      'Node.js',
-      'Express',
+      'Django REST Framework',
+      'FastAPI',
+      'REST APIs',
       'JWT',
       'Webhooks',
-      'Payment Gateways',
+      'Redis',
+      'OpenAPI',
+      'API Versioning',
+      'System Design',
+      'Razorpay',
+      'STC Pay',
+      'Dhamen Pay',
     ],
   },
   {
     label: 'Frontend',
-    skills: ['React.js', 'JavaScript', 'TypeScript'],
+    skills: ['TypeScript', 'JavaScript', 'React.js', 'Next.js'],
   },
   {
-    label: 'Database',
-    skills: ['PostgreSQL', 'MongoDB'],
+    label: 'Databases',
+    skills: ['PostgreSQL', 'SQL', 'MongoDB'],
   },
   {
-    label: 'Infrastructure',
+    label: 'Cloud & DevOps',
+    skills: ['GCP', 'Docker', 'Jenkins', 'CI/CD', 'Linux', 'Git'],
+  },
+  {
+    label: 'Testing',
     skills: [
-      'Linux',
-      'Server Ops',
-      'Log Analysis',
-      'Docker',
-      'CI/CD',
-      'Git',
+      'pytest',
+      'Unit Testing',
+      'Integration Testing',
+      'Performance Optimization',
+    ],
+  },
+  {
+    label: 'AI/ML',
+    skills: [
+      'Gemini',
+      'Azure OpenAI',
+      'Claude',
+      'Mistral',
+      'MediaPipe',
+      'Computer Vision',
+      'Whisper',
+      'Parakeet',
     ],
   },
 ]
@@ -82,12 +102,13 @@ export default function About() {
           className="text-[15px] md:text-[16px] font-light leading-[1.85] text-txt-secondary"
         >
           <strong className="text-txt-primary font-medium">
-            Backend-focused Full Stack Developer
+            Backend-focused Software Engineer
           </strong>{' '}
-          with production ownership across multiple SaaS products at a startup.
-          Experienced in legacy codebase recovery, payment/webhook systems,
-          Linux ops, and end-to-end product development — including two
-          self-built products taken to market.
+          with production ownership across five SaaS products, including a
+          FastAPI platform serving 50K+ users. Experienced in Django, FastAPI,
+          PostgreSQL, Redis, payment integrations, GCP deployments, and
+          zero-downtime migrations. Independently took Waddi&apos;s client-facing
+          CRM from ideation to production as sole developer.
         </motion.p>
       </div>
 

@@ -8,7 +8,7 @@ export default function Education() {
       {/* Degree */}
       <div>
         <h3 className="text-lg font-semibold text-txt-primary">
-          B.E — Information Science and Engineering
+          Bachelor of Engineering in Information Science and Engineering
         </h3>
         <p className="text-[13px] text-txt-secondary mt-0.5">
           Visvesvaraya Technological University
