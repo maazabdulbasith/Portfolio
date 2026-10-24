@@ -11,11 +11,13 @@ const jetbrains = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Abdul Basith Maaz — Backend Software Engineer',
+  title: 'Abdul Basith Maaz — Backend & GenAI Engineer',
   description:
-    'Backend-focused Software Engineer with production ownership across five SaaS products, including a FastAPI platform serving 50K+ users. Django, FastAPI, PostgreSQL, Redis, GCP.',
+    'Backend-focused Software Engineer and GenAI Engineer with production ownership across five SaaS products, including a FastAPI platform serving 50K+ users. Django, FastAPI, RAG, LangGraph, PostgreSQL.',
   keywords: [
     'Backend Engineer',
+    'GenAI Engineer',
+    'AI/ML Engineer',
     'Software Development Engineer',
     'Python',
     'Django',
@@ -33,9 +35,9 @@ export const metadata: Metadata = {
     'Abdul Basith Maaz',
   ],
   openGraph: {
-    title: 'Abdul Basith Maaz — Backend Software Engineer',
+    title: 'Abdul Basith Maaz — Backend & GenAI Engineer',
     description:
-      '50K+ users. Five SaaS products. Zero downtime. Django, FastAPI, PostgreSQL, RAG, LangGraph.',
+      '50K+ users. Five SaaS products. Zero downtime. Backend, GenAI, RAG, LangGraph.',
     type: 'website',
   },
 }

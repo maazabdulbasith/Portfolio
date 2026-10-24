@@ -56,7 +56,12 @@ const item = {
 
 export default function Hero() {
   const typedText = useTypewriter(
-    ['Backend Engineer', 'Software Development Engineer', 'Full Stack Developer'],
+    [
+      'Backend Engineer',
+      'GenAI Engineer',
+      'AI/ML Engineer',
+      'Software Development Engineer',
+    ],
     70,
     35,
     2400
