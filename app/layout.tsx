@@ -21,6 +21,10 @@ export const metadata: Metadata = {
     'Django',
     'FastAPI',
     'PostgreSQL',
+    'pgvector',
+    'RAG',
+    'LangGraph',
+    'LlamaIndex',
     'Redis',
     'GCP',
     'React',
@@ -31,7 +35,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Abdul Basith Maaz — Backend Software Engineer',
     description:
-      '50K+ users. Five SaaS products. Zero downtime. Django, FastAPI, PostgreSQL, Redis, GCP.',
+      '50K+ users. Five SaaS products. Zero downtime. Django, FastAPI, PostgreSQL, RAG, LangGraph.',
     type: 'website',
   },
 }

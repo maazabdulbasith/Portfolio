@@ -33,7 +33,14 @@ const SKILL_GROUPS: SkillGroup[] = [
   },
   {
     label: 'Databases',
-    skills: ['PostgreSQL', 'SQL', 'MongoDB'],
+    skills: [
+      'PostgreSQL',
+      'pgvector',
+      'Vector Databases',
+      'Embeddings',
+      'SQL',
+      'MongoDB',
+    ],
   },
   {
     label: 'Cloud & DevOps',
@@ -51,6 +58,10 @@ const SKILL_GROUPS: SkillGroup[] = [
   {
     label: 'AI/ML',
     skills: [
+      'RAG',
+      'Hybrid Search',
+      'LangGraph',
+      'LlamaIndex',
       'Gemini',
       'Azure OpenAI',
       'Claude',

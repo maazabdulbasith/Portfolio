@@ -23,23 +23,23 @@ const PROJECTS: Project[] = [
     ],
   },
   {
-    name: 'Complia.in',
-    badge: 'Launched — 50+ Users',
+    name: 'Wakat',
+    badge: 'Shipped',
     badgeType: 'amber',
-    tech: 'Python · Django · React · Azure OCR · Tesseract',
+    tech: 'Django · Celery · React · PostgreSQL',
     bullets: [
-      'Built and launched a compliance-notice parsing platform that acquired 50+ users, combining Azure OCR and Tesseract with a Django and React workflow.',
-      'Document ingestion pipeline using Azure OCR with Tesseract fallback for structured data extraction from regulatory notices.',
+      'Shipped a multi-tenant ZATCA Phase 2 e-invoicing and accounting platform for Saudi businesses, generating UBL XML invoices with per-device hash chains, ECDSA signatures, and nine-tag TLV QR codes, and submitting them to ZATCA\'s Fatoora platform for clearance and reporting.',
+      'Built the surrounding books in Django and Celery — subscriptions, purchases, chart of accounts, journals, VAT returns, and payroll — with a React app handling onboarding, device management, and CSID lifecycle.',
     ],
   },
   {
-    name: 'Translay.in',
+    name: 'Shelf',
     badge: 'In Development',
     badgeType: 'blue',
-    tech: 'Python · Django · React · DeepL API',
+    tech: 'FastAPI · Next.js · pgvector · LangGraph · LlamaIndex',
     bullets: [
-      'Real-time on-screen translation product that renders on-screen content into a target language for foreign-language web and social media consumption.',
-      'Sole developer; architected a low-latency screen capture and overlay pipeline with DeepL API integration.',
+      'Building screenshot search that fuses OCR, bge text embeddings, and CLIP image embeddings in pgvector with reciprocal rank fusion and reranking. Hybrid recall@5 was 1.0 and MRR 0.90 on 12 queries (full-text alone 0.83).',
+      'LangGraph ingest and LlamaIndex Ask cite sources and refuse thin evidence and prompt injection, with a keyless CI gate (action precision 1.0). Encrypted sync, in progress, keeps ciphertext on the server and embeddings on the device.',
     ],
   },
 ]

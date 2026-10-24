@@ -16,10 +16,10 @@ const EXPERIENCE: ExperienceItem[] = [
   {
     role: 'Software Development Engineer',
     company: 'Bottrion Systems Pvt. Ltd.',
-    date: 'Sep 2026 – Present',
-    location: 'Bengaluru, India',
+    date: 'Aug 2026 – Present',
+    location: 'Remote',
     previousRole: 'Junior Full Stack Engineer',
-    previousDate: 'Aug 2025 – Aug 2026',
+    previousDate: 'Aug 2025 – July 2026',
     bullets: [
       {
         text: 'Took sole backend ownership of Khayyal, a KSA SaaS platform serving 50K+ users; reverse-engineered and documented its FastAPI architecture after an engineer transition while maintaining zero downtime.',
