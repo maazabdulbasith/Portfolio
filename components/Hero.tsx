@@ -118,7 +118,7 @@ export default function Hero() {
           {/* CTA Buttons */}
           <motion.div variants={item} className="pt-10 flex gap-4">
             <a
-              href="/AbdulBasithMaaz_Resume.pdf"
+              href="/Abdul_Basith_Maaz_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[11px] font-semibold tracking-[2px] uppercase text-bg bg-accent border border-accent hover:bg-transparent hover:text-accent px-6 py-3.5 rounded transition-all duration-300"

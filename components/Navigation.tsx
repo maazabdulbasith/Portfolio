@@ -93,7 +93,7 @@ export default function Navigation() {
             </ul>
 
             <a
-              href="/AbdulBasithMaaz_Resume.pdf"
+              href="/Abdul_Basith_Maaz_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="text-[10px] font-semibold tracking-[2px] uppercase text-accent border border-accent/25 hover:border-accent hover:bg-accent-dim px-3.5 py-1.5 rounded transition-all duration-300"
@@ -147,7 +147,7 @@ export default function Navigation() {
               ))}
             </div>
             <a
-              href="/AbdulBasithMaaz_Resume.pdf"
+              href="/Abdul_Basith_Maaz_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               onClick={closeMobile}
