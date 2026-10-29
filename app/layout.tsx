@@ -33,6 +33,9 @@ export const metadata: Metadata = {
     'Next.js',
     'Portfolio',
     'Abdul Basith Maaz',
+    'Complia',
+    'Translay',
+    'Shelf',
   ],
   openGraph: {
     title: 'Abdul Basith Maaz — Backend & GenAI Engineer',
