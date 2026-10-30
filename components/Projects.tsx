@@ -14,7 +14,8 @@ interface Project {
 const PRODUCTION_PROJECTS: Project[] = [
   {
     name: 'AI Mock Interview Platform',
-    badge: 'Latest',
+    url: '/demos/ai-interview',
+    badge: 'Live Demo',
     badgeType: 'blue',
     tech: 'Next.js · MediaPipe · Whisper · Parakeet · Gemini',
     bullets: [
@@ -25,7 +26,8 @@ const PRODUCTION_PROJECTS: Project[] = [
   },
   {
     name: 'Wakat',
-    badge: 'Shipped',
+    url: '/demos/wakat',
+    badge: 'Live Demo',
     badgeType: 'amber',
     tech: 'Django · Celery · React · PostgreSQL',
     bullets: [
@@ -61,7 +63,8 @@ const PERSONAL_PROJECTS: Project[] = [
   },
   {
     name: 'Shelf',
-    badge: 'In Development',
+    url: '/demos/shelf',
+    badge: 'Live Demo',
     badgeType: 'blue',
     tech: 'FastAPI · Next.js · pgvector · LangGraph · LlamaIndex',
     bullets: [
