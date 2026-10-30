@@ -355,7 +355,8 @@ export default function ShelfDemo() {
       let score = 0
       const fullText = (shot.text + ' ' + shot.caption + ' ' + shot.title).toLowerCase()
       const textMatch = fullText.includes(q)
-      const tokenMatch = q.split(' ').some(word => word.length > 2 && fullText.includes(word))
+      const qTokens = q.split(/\s+/).filter(word => word.length > 2 && !['the', 'and', 'for', 'are', 'was', 'who', 'what', 'when', 'where', 'with', 'from'].includes(word))
+      const tokenMatch = qTokens.some(word => fullText.includes(word))
       
       const isClipTarget = (q.includes('blue') && (shot.file === 'blue.png' || shot.color === '#1e3a8a')) || 
                            (q.includes('red') && (shot.file === 'red.png' || shot.color === '#991b1b')) ||

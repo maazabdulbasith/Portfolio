@@ -153,8 +153,9 @@ export async function POST(req: Request) {
       })
     }
 
+    const STOPWORDS = new Set(['the', 'and', 'for', 'are', 'was', 'who', 'did', 'can', 'has', 'how', 'what', 'when', 'where', 'why', 'with', 'from', 'that', 'this', 'you', 'your', 'about'])
     const qLower = q.toLowerCase()
-    const words = qLower.split(/\s+/).filter((w: string) => w.length > 2)
+    const words = qLower.split(/\s+/).filter((w: string) => w.length > 2 && !STOPWORDS.has(w))
 
     // 2. Score Knowledge Base Hits (Hybrid Text & Semantic Tokens)
     const scored = KNOWLEDGE_BASE.map(shot => {
