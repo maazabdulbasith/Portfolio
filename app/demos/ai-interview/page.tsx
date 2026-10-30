@@ -1,13 +1,12 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
-import Script from 'next/script'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   ArrowLeft, Play, Pause, RotateCcw, Eye, Activity, 
   Smile, ShieldCheck, Zap, Sparkles, ExternalLink, Camera, 
-  VideoOff, RefreshCw, CheckCircle2, AlertCircle
+  VideoOff, RefreshCw, CheckCircle2, AlertCircle, Compass
 } from 'lucide-react'
 
 // Pinned Landmark constants from ai-video
@@ -21,7 +20,25 @@ const LANDMARKS = {
   FOREHEAD: 10
 }
 
-const YAW_THRESHOLD = 0.08
+const YAW_THRESHOLD = 0.08 // Threshold from geometry.py
+
+// Script loader helper
+function loadScript(src: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (typeof document === 'undefined') return resolve()
+    const existing = document.querySelector(`script[src="${src}"]`)
+    if (existing) {
+      resolve()
+      return
+    }
+    const script = document.createElement('script')
+    script.src = src
+    script.crossOrigin = 'anonymous'
+    script.onload = () => resolve()
+    script.onerror = () => reject(new Error(`Failed to load ${src}`))
+    document.head.appendChild(script)
+  })
+}
 
 // Simulated 15-second telemetry timeline for fallback/instant preview
 interface FrameData {
@@ -35,33 +52,35 @@ interface FrameData {
 }
 
 const SIMULATED_TIMELINE: FrameData[] = [
-  { time: 0, eyeContact: 92, yawDeg: 0.8, tiltDeg: 0.5, smileRatio: 0.15, entropy: 1.42, emotion: 'Engaged' },
-  { time: 1, eyeContact: 95, yawDeg: -1.2, tiltDeg: -0.4, smileRatio: 0.22, entropy: 1.55, emotion: 'Engaged' },
-  { time: 2, eyeContact: 88, yawDeg: 2.1, tiltDeg: 1.0, smileRatio: 0.18, entropy: 1.60, emotion: 'Engaged' },
-  { time: 3, eyeContact: 72, yawDeg: 5.4, tiltDeg: 2.1, smileRatio: 0.12, entropy: 1.74, emotion: 'Thoughtful' },
-  { time: 4, eyeContact: 65, yawDeg: 7.2, tiltDeg: 3.0, smileRatio: 0.10, entropy: 1.81, emotion: 'Thoughtful' },
-  { time: 5, eyeContact: 84, yawDeg: 3.0, tiltDeg: 1.2, smileRatio: 0.25, entropy: 1.85, emotion: 'Engaged' },
-  { time: 6, eyeContact: 91, yawDeg: 0.4, tiltDeg: 0.2, smileRatio: 0.38, entropy: 1.90, emotion: 'Smiling' },
-  { time: 7, eyeContact: 94, yawDeg: -0.6, tiltDeg: -0.5, smileRatio: 0.35, entropy: 1.88, emotion: 'Smiling' },
-  { time: 8, eyeContact: 89, yawDeg: -1.8, tiltDeg: -1.1, smileRatio: 0.20, entropy: 1.82, emotion: 'Engaged' },
-  { time: 9, eyeContact: 82, yawDeg: 3.5, tiltDeg: 0.8, smileRatio: 0.14, entropy: 1.78, emotion: 'Engaged' },
-  { time: 10, eyeContact: 96, yawDeg: 0.2, tiltDeg: 0.1, smileRatio: 0.28, entropy: 1.80, emotion: 'Engaged' },
-  { time: 11, eyeContact: 90, yawDeg: -2.0, tiltDeg: -0.7, smileRatio: 0.21, entropy: 1.75, emotion: 'Engaged' },
-  { time: 12, eyeContact: 93, yawDeg: 1.1, tiltDeg: 0.4, smileRatio: 0.30, entropy: 1.79, emotion: 'Engaged' },
-  { time: 13, eyeContact: 87, yawDeg: -3.8, tiltDeg: -1.5, smileRatio: 0.18, entropy: 1.76, emotion: 'Thoughtful' },
-  { time: 14, eyeContact: 94, yawDeg: 0.5, tiltDeg: 0.2, smileRatio: 0.24, entropy: 1.83, emotion: 'Engaged' },
-  { time: 15, eyeContact: 95, yawDeg: -0.2, tiltDeg: 0.0, smileRatio: 0.26, entropy: 1.85, emotion: 'Engaged' },
+  { time: 0, eyeContact: 92, yawDeg: 0.8, tiltDeg: 0.5, smileRatio: 0.38, entropy: 1.42, emotion: 'Engaged' },
+  { time: 1, eyeContact: 95, yawDeg: -1.2, tiltDeg: -0.4, smileRatio: 0.39, entropy: 1.55, emotion: 'Engaged' },
+  { time: 2, eyeContact: 88, yawDeg: 2.1, tiltDeg: 1.0, smileRatio: 0.40, entropy: 1.60, emotion: 'Engaged' },
+  { time: 3, eyeContact: 72, yawDeg: 5.4, tiltDeg: 2.1, smileRatio: 0.36, entropy: 1.74, emotion: 'Thoughtful' },
+  { time: 4, eyeContact: 65, yawDeg: 7.2, tiltDeg: 3.0, smileRatio: 0.35, entropy: 1.81, emotion: 'Thoughtful' },
+  { time: 5, eyeContact: 84, yawDeg: 3.0, tiltDeg: 1.2, smileRatio: 0.42, entropy: 1.85, emotion: 'Engaged' },
+  { time: 6, eyeContact: 91, yawDeg: 0.4, tiltDeg: 0.2, smileRatio: 0.51, entropy: 1.90, emotion: 'Smiling' },
+  { time: 7, eyeContact: 94, yawDeg: -0.6, tiltDeg: -0.5, smileRatio: 0.49, entropy: 1.88, emotion: 'Smiling' },
+  { time: 8, eyeContact: 89, yawDeg: -1.8, tiltDeg: -1.1, smileRatio: 0.41, entropy: 1.82, emotion: 'Engaged' },
+  { time: 9, eyeContact: 82, yawDeg: 3.5, tiltDeg: 0.8, smileRatio: 0.37, entropy: 1.78, emotion: 'Engaged' },
+  { time: 10, eyeContact: 96, yawDeg: 0.2, tiltDeg: 0.1, smileRatio: 0.44, entropy: 1.80, emotion: 'Engaged' },
+  { time: 11, eyeContact: 90, yawDeg: -2.0, tiltDeg: -0.7, smileRatio: 0.40, entropy: 1.75, emotion: 'Engaged' },
+  { time: 12, eyeContact: 93, yawDeg: 1.1, tiltDeg: 0.4, smileRatio: 0.43, entropy: 1.79, emotion: 'Engaged' },
+  { time: 13, eyeContact: 87, yawDeg: -3.8, tiltDeg: -1.5, smileRatio: 0.38, entropy: 1.76, emotion: 'Thoughtful' },
+  { time: 14, eyeContact: 94, yawDeg: 0.5, tiltDeg: 0.2, smileRatio: 0.42, entropy: 1.83, emotion: 'Engaged' },
+  { time: 15, eyeContact: 95, yawDeg: -0.2, tiltDeg: 0.0, smileRatio: 0.41, entropy: 1.85, emotion: 'Engaged' },
 ]
 
 export default function AIInterviewDemo() {
   const [mode, setMode] = useState<'camera' | 'simulation'>('camera')
-  const [scriptsLoaded, setScriptsLoaded] = useState(false)
   const [cameraActive, setCameraActive] = useState(false)
-  const [sessionStatus, setSessionStatus] = useState<'idle' | 'waiting' | 'calibrating' | 'active' | 'analyzing'>('idle')
+  const [sessionStatus, setSessionStatus] = useState<'idle' | 'initializing' | 'calibrating' | 'active' | 'analyzing'>('idle')
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   
   // Real-time metrics
-  const [eyeContactLive, setEyeContactLive] = useState(0)
+  const [eyeContactLive, setEyeContactLive] = useState(100)
   const [yawLive, setYawLive] = useState(0)
+  const [tiltLive, setTiltLive] = useState(0)
+  const [smileLive, setSmileLive] = useState(0.38)
   const [frameCountLive, setFrameCountLive] = useState(0)
   const [sessionSeconds, setSessionSeconds] = useState(0)
   const [calibrationProgress, setCalibrationProgress] = useState(0)
@@ -89,11 +108,12 @@ export default function AIInterviewDemo() {
   // DOM Refs
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const cameraInstanceRef = useRef<any>(null)
-  const faceMeshInstanceRef = useRef<any>(null)
+  const streamRef = useRef<MediaStream | null>(null)
+  const animFrameRef = useRef<number | null>(null)
+  const faceMeshRef = useRef<any>(null)
 
-  // Mutable tracking state for live camera
-  const trackingRef = useRef({
+  // Tracking mutable state
+  const tracker = useRef({
     totalFrames: 0,
     eyeContactFrames: 0,
     baselineYaw: 0,
@@ -101,27 +121,19 @@ export default function AIInterviewDemo() {
     sessionBuffer: [] as any[],
     startTime: 0,
     scanEndTime: 0,
+    lastUiUpdate: 0,
   })
 
-  // Check MediaPipe availability
-  const checkMediaPipe = () => {
-    if (typeof window !== 'undefined' && (window as any).FaceMesh && (window as any).Camera) {
-      setScriptsLoaded(true)
-    }
-  }
-
-  // --- LIVE WEBCAM ENGINE ---
-  const startCameraSession = async () => {
-    if (!videoRef.current || !canvasRef.current) return
-
-    setCameraActive(true)
-    setSessionStatus('waiting')
+  // Start Real Camera Feed
+  const startCamera = async () => {
+    setErrorMessage(null)
+    setSessionStatus('initializing')
     setSessionSeconds(0)
     setFrameCountLive(0)
-    setEyeContactLive(0)
+    setEyeContactLive(100)
     setCalibrationProgress(0)
 
-    trackingRef.current = {
+    tracker.current = {
       totalFrames: 0,
       eyeContactFrames: 0,
       baselineYaw: 0,
@@ -129,81 +141,102 @@ export default function AIInterviewDemo() {
       sessionBuffer: [],
       startTime: Date.now(),
       scanEndTime: Date.now() + 5000,
+      lastUiUpdate: 0,
     }
 
     try {
-      const FaceMeshClass = (window as any).FaceMesh
-      const CameraClass = (window as any).Camera
+      // 1. Request user media directly
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          width: { ideal: 640 },
+          height: { ideal: 480 },
+          facingMode: 'user'
+        },
+        audio: false
+      })
 
-      if (!FaceMeshClass || !CameraClass) {
-        alert('MediaPipe engine is still loading. Please try again in a moment.')
-        setCameraActive(false)
-        setSessionStatus('idle')
-        return
+      streamRef.current = stream
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+        await videoRef.current.play()
       }
 
-      const faceMesh = new FaceMeshClass({
-        locateFile: (file: string) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/${file}`
-      })
+      setCameraActive(true)
+      setSessionStatus('calibrating')
 
-      faceMesh.setOptions({
-        maxNumFaces: 1,
-        refineLandmarks: true,
-        minDetectionConfidence: 0.5,
-        minTrackingConfidence: 0.5
-      })
+      // 2. Load MediaPipe dynamically in parallel
+      await loadScript('https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/face_mesh.js')
+      await loadScript('https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3.1620248257/drawing_utils.js')
 
-      faceMesh.onResults(handleMediaPipeResults)
-      faceMeshInstanceRef.current = faceMesh
+      const FaceMeshClass = (window as any).FaceMesh
+      if (FaceMeshClass) {
+        const fm = new FaceMeshClass({
+          locateFile: (file: string) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/${file}`
+        })
 
-      const camera = new CameraClass(videoRef.current, {
-        onFrame: async () => {
-          if (videoRef.current) {
-            await faceMesh.send({ image: videoRef.current })
-          }
-        },
-        width: 640,
-        height: 480
-      })
+        fm.setOptions({
+          maxNumFaces: 1,
+          refineLandmarks: true,
+          minDetectionConfidence: 0.5,
+          minTrackingConfidence: 0.5
+        })
 
-      await camera.start()
-      cameraInstanceRef.current = camera
-    } catch (err) {
-      console.error(err)
-      alert('Could not access webcam. Switching to Telemetry Simulation mode.')
-      setMode('simulation')
-      setCameraActive(false)
+        fm.onResults(onMediaPipeResults)
+        faceMeshRef.current = fm
+      }
+
+      // 3. Start processing loop via requestVideoFrameCallback or requestAnimationFrame
+      startFrameLoop()
+
+    } catch (err: any) {
+      console.error('Camera initialization error:', err)
+      setErrorMessage(err.message || 'Unable to access camera. Please check browser permissions.')
       setSessionStatus('idle')
+      setCameraActive(false)
     }
   }
 
-  const stopCameraSession = async () => {
-    setSessionStatus('analyzing')
-    setIsAnalyzing(true)
-
-    if (cameraInstanceRef.current) {
-      cameraInstanceRef.current.stop()
+  // Stop Camera Feed & Trigger Real Gemini 1.5 Flash Analysis
+  const stopCamera = async () => {
+    if (animFrameRef.current) {
+      cancelAnimationFrame(animFrameRef.current)
+      animFrameRef.current = null
     }
-    if (faceMeshInstanceRef.current) {
-      faceMeshInstanceRef.current.close()
+
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(t => t.stop())
+      streamRef.current = null
+    }
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = null
+    }
+
+    if (faceMeshRef.current) {
+      faceMeshRef.current.close()
+      faceMeshRef.current = null
     }
 
     setCameraActive(false)
+    setSessionStatus('analyzing')
+    setIsAnalyzing(true)
 
     // Call real Gemini API route with collected session telemetry
     try {
-      const avgEye = trackingRef.current.totalFrames > 0 
-        ? Math.round((trackingRef.current.eyeContactFrames / trackingRef.current.totalFrames) * 100)
-        : 88
+      const avgEye = tracker.current.totalFrames > 0 
+        ? Math.round((tracker.current.eyeContactFrames / tracker.current.totalFrames) * 100)
+        : 90
 
       const res = await fetch('/api/analyze-interview', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           eyeContactAvg: avgEye,
-          yawDeviationAvg: 1.8,
+          yawDeviationAvg: Math.abs(yawLive),
+          smileRatioAvg: smileLive,
           expressionVariety: 1.84,
-          timeline: trackingRef.current.sessionBuffer.slice(-15)
+          timeline: tracker.current.sessionBuffer.slice(-15)
         })
       })
 
@@ -212,8 +245,8 @@ export default function AIInterviewDemo() {
         setFeedback({
           narrative: data.narrative,
           source: data.source === 'gemini-1.5-flash' ? 'Live Gemini 1.5 Flash' : 'Local Synthesizer',
-          strengths: data.strengths || ['Consistent eye-line maintained', 'Natural composure'],
-          tips: data.tips || ['Keep natural posture']
+          strengths: data.strengths || ['Consistent eye-line maintained', 'Natural posture'],
+          tips: data.tips || ['Keep natural composure during pauses']
         })
       }
     } catch (err) {
@@ -224,8 +257,34 @@ export default function AIInterviewDemo() {
     }
   }
 
-  // Real-time landmark geometry handler
-  const handleMediaPipeResults = (results: any) => {
+  // Main Video Frame Processing Loop
+  const startFrameLoop = () => {
+    const processFrame = async () => {
+      if (!videoRef.current || videoRef.current.paused || videoRef.current.ended) {
+        animFrameRef.current = requestAnimationFrame(processFrame)
+        return
+      }
+
+      // If MediaPipe is initialized, send frame
+      if (faceMeshRef.current) {
+        try {
+          await faceMeshRef.current.send({ image: videoRef.current })
+        } catch (e) {
+          // Fallback pass-through if send fails
+          drawFallbackOverlay()
+        }
+      } else {
+        drawFallbackOverlay()
+      }
+
+      animFrameRef.current = requestAnimationFrame(processFrame)
+    }
+
+    animFrameRef.current = requestAnimationFrame(processFrame)
+  }
+
+  // Real-time calculation matching geometry.py
+  const onMediaPipeResults = (results: any) => {
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
@@ -237,86 +296,96 @@ export default function AIInterviewDemo() {
 
     ctx.save()
     ctx.clearRect(0, 0, width, height)
-    ctx.drawImage(results.image, 0, 0, width, height)
 
     if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
       const landmarks = results.multiFaceLandmarks[0]
       const nose = landmarks[LANDMARKS.NOSE_TIP]
       const earL = landmarks[LANDMARKS.LEFT_EAR]
       const earR = landmarks[LANDMARKS.RIGHT_EAR]
+      const mouthL = landmarks[LANDMARKS.MOUTH_LEFT]
+      const mouthR = landmarks[LANDMARKS.MOUTH_RIGHT]
 
+      // === GEOMETRY.PY MATHEMATICAL IMPLEMENTATION ===
+      // 1. Ears midpoint & Yaw deviation
       const earsMidX = (earL.x + earR.x) / 2
-      const yaw = nose.x - earsMidX
+      const rawYaw = nose.x - earsMidX
 
-      // First detection -> Calibration
-      if (sessionStatus === 'waiting') {
-        setSessionStatus('calibrating')
-      }
+      // 2. Head Tilt (Roll)
+      const tiltVal = earL.y - earR.y
+      const currentTiltDeg = +(tiltVal * 90).toFixed(1)
 
-      // 5-Second Futuristic Calibration Scan Animation
-      if (now < trackingRef.current.scanEndTime) {
-        trackingRef.current.calibrationYaws.push(yaw)
-        const progress = Math.min((5000 - (trackingRef.current.scanEndTime - now)) / 5000, 1)
-        setCalibrationProgress(Math.round(progress * 100))
+      // 3. Smile Ratio: mouth_width / face_width
+      const faceWidth = Math.hypot(earL.x - earR.x, earL.y - earR.y)
+      const mouthWidth = Math.hypot(mouthL.x - mouthR.x, mouthL.y - mouthR.y)
+      const currentSmileRatio = faceWidth > 0 ? +(mouthWidth / faceWidth).toFixed(2) : 0.38
 
-        // Cybernetic targeting reticles
+      // 4. Calibration Phase (First 5 seconds)
+      if (now < tracker.current.scanEndTime) {
+        tracker.current.calibrationYaws.push(rawYaw)
+        const progress = Math.min((5000 - (tracker.current.scanEndTime - now)) / 5000, 1)
+
+        // Throttle UI update
+        if (now - tracker.current.lastUiUpdate > 200) {
+          setCalibrationProgress(Math.round(progress * 100))
+          tracker.current.lastUiUpdate = now
+        }
+
+        // Draw Futuristic Scan Animation
         ctx.strokeStyle = '#06b6d4'
         ctx.lineWidth = 2
         const sz = 35
-
-        // Brackets
         ctx.strokeRect(20, 20, sz, sz)
         ctx.strokeRect(width - 20 - sz, 20, sz, sz)
         ctx.strokeRect(20, height - 20 - sz, sz, sz)
         ctx.strokeRect(width - 20 - sz, height - 20 - sz, sz, sz)
 
-        // Scan beam
+        // Scanline
         const scanY = ((now % 1200) / 1200) * height
         ctx.fillStyle = 'rgba(6, 182, 212, 0.25)'
         ctx.fillRect(0, scanY - 15, width, 30)
-
         ctx.strokeStyle = '#22d3ee'
         ctx.beginPath()
         ctx.moveTo(0, scanY)
         ctx.lineTo(width, scanY)
         ctx.stroke()
+
       } else {
-        // Calibration Complete -> Active Session
+        // Calibration Complete -> Set Baseline
         if (sessionStatus === 'calibrating') {
-          const avgYaw = trackingRef.current.calibrationYaws.length > 0
-            ? trackingRef.current.calibrationYaws.reduce((a, b) => a + b, 0) / trackingRef.current.calibrationYaws.length
+          const avgYaw = tracker.current.calibrationYaws.length > 0
+            ? tracker.current.calibrationYaws.reduce((a, b) => a + b, 0) / tracker.current.calibrationYaws.length
             : 0
-          trackingRef.current.baselineYaw = avgYaw
+          tracker.current.baselineYaw = avgYaw
           setSessionStatus('active')
         }
 
-        // Real-time tracking
-        trackingRef.current.totalFrames++
-        const adjustedYaw = yaw - trackingRef.current.baselineYaw
-        const lookingAtCamera = Math.abs(adjustedYaw) <= YAW_THRESHOLD
+        // 5. Active Session Tracking (geometry.py adjusted yaw)
+        tracker.current.totalFrames++
+        const adjustedYaw = rawYaw - tracker.current.baselineYaw
+        const currentYawDeg = +(adjustedYaw * 120).toFixed(1)
+        const isLookingAtCamera = Math.abs(adjustedYaw) <= YAW_THRESHOLD
 
-        if (lookingAtCamera) {
-          trackingRef.current.eyeContactFrames++
+        if (isLookingAtCamera) {
+          tracker.current.eyeContactFrames++
         }
 
-        const eyePct = Math.round((trackingRef.current.eyeContactFrames / trackingRef.current.totalFrames) * 100)
-        setEyeContactLive(eyePct)
-        setYawLive(+(adjustedYaw * 100).toFixed(1))
-        setFrameCountLive(trackingRef.current.totalFrames)
+        const eyePct = Math.round((tracker.current.eyeContactFrames / tracker.current.totalFrames) * 100)
 
-        // Store frame telemetry
-        trackingRef.current.sessionBuffer.push({
-          time: Math.floor((now - trackingRef.current.startTime) / 1000),
-          eyeContact: eyePct,
-          yaw: adjustedYaw,
-          isLooking: lookingAtCamera
-        })
+        // Throttle React State updates to 4fps to prevent UI churn
+        if (now - tracker.current.lastUiUpdate > 250) {
+          setEyeContactLive(eyePct)
+          setYawLive(currentYawDeg)
+          setTiltLive(currentTiltDeg)
+          setSmileLive(currentSmileRatio)
+          setFrameCountLive(tracker.current.totalFrames)
+          tracker.current.lastUiUpdate = now
+        }
 
-        // Draw face oval indicator
+        // Draw Active Mesh Overlay
         const DrawUtils = (window as any)
         if (DrawUtils && DrawUtils.drawConnectors && (window as any).FACEMESH_FACE_OVAL) {
           DrawUtils.drawConnectors(ctx, landmarks, (window as any).FACEMESH_FACE_OVAL, {
-            color: lookingAtCamera ? 'rgba(16, 185, 129, 0.8)' : 'rgba(239, 68, 68, 0.8)',
+            color: isLookingAtCamera ? 'rgba(16, 185, 129, 0.85)' : 'rgba(239, 68, 68, 0.85)',
             lineWidth: 2
           })
         }
@@ -326,7 +395,16 @@ export default function AIInterviewDemo() {
     ctx.restore()
   }
 
-  // Timer loop for active session
+  // Fallback overlay when MediaPipe is loading
+  const drawFallbackOverlay = () => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+  }
+
+  // Active session timer
   useEffect(() => {
     let timer: NodeJS.Timeout
     if (cameraActive && sessionStatus === 'active') {
@@ -371,7 +449,7 @@ export default function AIInterviewDemo() {
         [cx - 40, cy - 35], [cx - 15, cy - 40], [cx + 15, cy - 40], [cx + 40, cy - 35],
         [cx - 30, cy - 15], [cx - 10, cy - 15], [cx + 10, cy - 15], [cx + 30, cy - 15],
         [cx, cy + 10], [cx - 12, cy + 25], [cx + 12, cy + 25],
-        [cx - 28, cy + 55], [cx, cy + 50 + currentSimFrame.smileRatio * 15], [cx + 28, cy + 55],
+        [cx - 28, cy + 55], [cx, cy + 50 + (currentSimFrame.smileRatio - 0.35) * 40], [cx + 28, cy + 55],
         [cx, cy + 70], [cx - 65, cy], [cx + 65, cy]
       ]
 
@@ -412,28 +490,16 @@ export default function AIInterviewDemo() {
     return () => clearInterval(interval)
   }, [mode, simPlaying])
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current)
+      if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop())
+    }
+  }, [])
+
   return (
     <div className="min-h-screen bg-[#09090b] text-[#f4f4f5] font-sans">
-      {/* Load MediaPipe External Scripts */}
-      <Script 
-        src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/face_mesh.js"
-        strategy="afterInteractive"
-        onLoad={checkMediaPipe}
-      />
-      <Script 
-        src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1640029074/camera_utils.js"
-        strategy="afterInteractive"
-        onLoad={checkMediaPipe}
-      />
-      <Script 
-        src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3.1620248257/drawing_utils.js"
-        strategy="afterInteractive"
-        onLoad={checkMediaPipe}
-      />
-
-      {/* Hidden WebCam Capture Source */}
-      <video ref={videoRef} className="hidden" playsInline muted />
-
       {/* Header */}
       <header className="border-b border-[#27272a] bg-[#111113]/80 backdrop-blur sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -477,7 +543,7 @@ export default function AIInterviewDemo() {
               5s Cybernetic Calibration
             </span>
             <span className="text-[10px] font-mono bg-[#18181b] border border-[#27272a] px-2.5 py-1 rounded text-[#a1a1aa]">
-              Real-Time Eye Gaze
+              geometry.py Threshold (0.08 rad)
             </span>
             <span className="text-[10px] font-mono bg-[#18181b] border border-[#27272a] px-2.5 py-1 rounded text-cyan-400 border-cyan-900">
               Live Gemini 1.5 Flash API
@@ -499,7 +565,7 @@ export default function AIInterviewDemo() {
             <div className="flex items-center bg-[#18181b] border border-[#27272a] rounded-lg p-1">
               <button
                 onClick={() => {
-                  if (cameraActive) stopCameraSession()
+                  if (cameraActive) stopCamera()
                   setMode('camera')
                 }}
                 className={`text-xs font-mono px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors ${
@@ -510,7 +576,7 @@ export default function AIInterviewDemo() {
               </button>
               <button
                 onClick={() => {
-                  if (cameraActive) stopCameraSession()
+                  if (cameraActive) stopCamera()
                   setMode('simulation')
                 }}
                 className={`text-xs font-mono px-3 py-1.5 rounded-md flex items-center gap-1.5 transition-colors ${
@@ -522,6 +588,14 @@ export default function AIInterviewDemo() {
             </div>
           </div>
         </div>
+
+        {/* Error Notification if Camera Fails */}
+        {errorMessage && (
+          <div className="mb-6 p-4 rounded-lg bg-red-950/60 border border-red-800 text-red-200 text-xs font-mono flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
+            <div>{errorMessage}</div>
+          </div>
+        )}
 
         {/* Video / Canvas + Dashboard Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
@@ -544,23 +618,59 @@ export default function AIInterviewDemo() {
                 )}
               </div>
 
-              {/* Main Canvas Viewport */}
+              {/* Main Viewport Container */}
               <div className="relative aspect-[4/3] rounded-lg overflow-hidden border border-[#27272a] bg-black flex items-center justify-center">
-                <canvas 
-                  ref={canvasRef} 
-                  width={480} 
-                  height={360}
-                  className="w-full h-full object-contain"
+                {/* Active Live Video */}
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  playsInline
+                  muted
+                  className={`w-full h-full object-cover transform scale-x-[-1] ${mode === 'camera' && cameraActive ? 'block' : 'hidden'}`}
                 />
 
-                {/* HUD Overlay */}
-                <div className="absolute top-2.5 left-2.5 text-[10px] font-mono text-cyan-400/90 bg-black/70 px-2 py-0.5 rounded border border-cyan-900/50">
-                  {mode === 'camera' 
-                    ? `STATUS: ${sessionStatus.toUpperCase()}`
-                    : `FRAME: ${simTime}s / 15s | WASM_OK`}
-                </div>
+                {/* Live Canvas Overlay */}
+                <canvas 
+                  ref={canvasRef} 
+                  width={640} 
+                  height={480}
+                  className={`w-full h-full object-contain ${
+                    mode === 'camera' && cameraActive 
+                      ? 'absolute inset-0 pointer-events-none transform scale-x-[-1]' 
+                      : 'block'
+                  }`}
+                />
 
-                {mode === 'camera' && sessionStatus === 'calibrating' && (
+                {/* Initial Camera Permission Gate */}
+                {mode === 'camera' && !cameraActive && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#121215] p-6 text-center">
+                    <div className="w-14 h-14 rounded-full bg-cyan-950/80 border border-cyan-800/80 flex items-center justify-center mb-4 text-cyan-400">
+                      <Camera className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-sm font-semibold text-white mb-1">
+                      Webcam Behavioral Analysis
+                    </h3>
+                    <p className="text-xs text-[#a1a1aa] max-w-xs mb-5">
+                      Grant camera access to track eye contact, posture, and facial gestures in real time using local WebAssembly.
+                    </p>
+                    <button
+                      onClick={startCamera}
+                      className="px-5 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-black font-semibold text-xs font-mono rounded-lg flex items-center gap-2 transition-colors shadow-lg shadow-cyan-500/20"
+                    >
+                      <Camera className="w-4 h-4" /> Grant Permission & Start Camera
+                    </button>
+                  </div>
+                )}
+
+                {/* HUD Overlay Stamp */}
+                {cameraActive && (
+                  <div className="absolute top-2.5 left-2.5 text-[10px] font-mono text-cyan-400/90 bg-black/70 px-2 py-0.5 rounded border border-cyan-900/50">
+                    STATUS: {sessionStatus.toUpperCase()}
+                  </div>
+                )}
+
+                {/* Calibration Animation Overlay */}
+                {mode === 'camera' && cameraActive && sessionStatus === 'calibrating' && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px]">
                     <div className="text-sm font-mono font-bold text-cyan-400 mb-2">
                       LOOK AT CAMERA... CALIBRATING
@@ -580,17 +690,10 @@ export default function AIInterviewDemo() {
             {/* Controls */}
             <div className="mt-4 pt-3 border-t border-[#27272a]">
               {mode === 'camera' ? (
-                <div className="flex items-center justify-between">
-                  {!cameraActive ? (
+                <div>
+                  {cameraActive && (
                     <button
-                      onClick={startCameraSession}
-                      className="w-full py-2.5 bg-cyan-500 hover:bg-cyan-400 text-black font-semibold text-xs font-mono rounded-lg flex items-center justify-center gap-2 transition-colors"
-                    >
-                      <Camera className="w-4 h-4" /> Start Interview Session
-                    </button>
-                  ) : (
-                    <button
-                      onClick={stopCameraSession}
+                      onClick={stopCamera}
                       className="w-full py-2.5 bg-red-600 hover:bg-red-500 text-white font-semibold text-xs font-mono rounded-lg flex items-center justify-center gap-2 transition-colors"
                     >
                       <VideoOff className="w-4 h-4" /> Stop Session & Generate AI Feedback
@@ -634,11 +737,13 @@ export default function AIInterviewDemo() {
           {/* Telemetry HUD & AI Coach Report (7 cols) */}
           <div className="lg:col-span-7 flex flex-col justify-between space-y-4">
             <div className="grid grid-cols-2 gap-3">
-              {/* Eye Contact */}
+              {/* Eye Contact Ratio */}
               <div className="bg-[#121215] border border-[#27272a] rounded-xl p-4">
                 <div className="flex items-center justify-between text-[#71717a] text-xs font-mono mb-1">
                   <span className="flex items-center gap-1.5"><Eye className="w-3.5 h-3.5 text-cyan-400" /> Eye Contact</span>
-                  <span className="text-white font-bold text-sm">
+                  <span className={`text-sm font-bold ${
+                    (mode === 'camera' ? eyeContactLive : currentSimFrame.eyeContact) >= 80 ? 'text-emerald-400' : 'text-amber-400'
+                  }`}>
                     {mode === 'camera' ? `${eyeContactLive}%` : `${currentSimFrame.eyeContact}%`}
                   </span>
                 </div>
@@ -649,32 +754,50 @@ export default function AIInterviewDemo() {
                   />
                 </div>
                 <div className="text-[10px] text-[#71717a] mt-2">
-                  Target &gt; 80% direct ocular engagement
+                  Target &gt; 80% (Threshold: |yaw| &le; 0.08)
                 </div>
               </div>
 
               {/* Head Yaw Deviation */}
               <div className="bg-[#121215] border border-[#27272a] rounded-xl p-4">
                 <div className="flex items-center justify-between text-[#71717a] text-xs font-mono mb-1">
-                  <span>Head Yaw Offset</span>
-                  <span className="font-bold text-emerald-400 text-sm">
-                    {mode === 'camera' ? `${yawLive}°` : `${currentSimFrame.yawDeg}°`}
+                  <span className="flex items-center gap-1.5"><Compass className="w-3.5 h-3.5 text-cyan-400" /> Head Yaw Offset</span>
+                  <span className={`text-sm font-bold ${
+                    Math.abs(mode === 'camera' ? yawLive : currentSimFrame.yawDeg) > 4.6 ? 'text-amber-400' : 'text-emerald-400'
+                  }`}>
+                    {mode === 'camera' ? `${yawLive > 0 ? `+${yawLive}` : yawLive}°` : `${currentSimFrame.yawDeg}°`}
                   </span>
                 </div>
                 <div className="text-xs font-mono text-[#a1a1aa] mt-1">
-                  Threshold: ±0.08 rad (4.6°)
+                  Baseline calibrated at session start
                 </div>
                 <div className="text-[10px] text-[#71717a] mt-2">
-                  {mode === 'camera' 
-                    ? (Math.abs(yawLive) > 4.6 ? '⚠️ Lateral gaze drift' : '✓ Forward aligned')
-                    : (Math.abs(currentSimFrame.yawDeg) > 4.6 ? '⚠️ Lateral gaze drift' : '✓ Forward aligned')}
+                  {Math.abs(mode === 'camera' ? yawLive : currentSimFrame.yawDeg) > 4.6 
+                    ? '⚠️ Lateral gaze drift detected' 
+                    : '✓ Direct forward camera focus'}
                 </div>
               </div>
 
-              {/* Frames / Session Time */}
+              {/* Head Tilt & Smile Ratio */}
               <div className="bg-[#121215] border border-[#27272a] rounded-xl p-4">
                 <div className="flex items-center justify-between text-[#71717a] text-xs font-mono mb-1">
-                  <span>Session Duration</span>
+                  <span className="flex items-center gap-1.5"><Smile className="w-3.5 h-3.5 text-amber-400" /> Smile Index</span>
+                  <span className="text-white font-bold text-sm">
+                    {mode === 'camera' ? smileLive : currentSimFrame.smileRatio}
+                  </span>
+                </div>
+                <div className="text-xs font-mono text-[#a1a1aa] mt-1">
+                  Mouth Width / Face Width (Neutral ~0.38)
+                </div>
+                <div className="text-[10px] text-cyan-400 mt-2">
+                  {(mode === 'camera' ? smileLive : currentSimFrame.smileRatio) > 0.48 ? 'Warm Affirmatory Smile' : 'Attentive Composure'}
+                </div>
+              </div>
+
+              {/* Duration & Frame Rate */}
+              <div className="bg-[#121215] border border-[#27272a] rounded-xl p-4">
+                <div className="flex items-center justify-between text-[#71717a] text-xs font-mono mb-1">
+                  <span>Session Elapsed</span>
                   <span className="text-white font-bold text-sm">
                     {mode === 'camera' 
                       ? `00:${sessionSeconds < 10 ? `0${sessionSeconds}` : sessionSeconds}`
@@ -682,26 +805,10 @@ export default function AIInterviewDemo() {
                   </span>
                 </div>
                 <div className="text-xs font-mono text-[#a1a1aa] mt-1">
-                  {mode === 'camera' ? `${frameCountLive} frames processed` : '15s sampled window'}
+                  {mode === 'camera' ? `${frameCountLive} frames sampled` : '15s pre-recorded window'}
                 </div>
-                <div className="text-[10px] text-cyan-400 mt-2">
-                  Browser WASM Edge Pipeline
-                </div>
-              </div>
-
-              {/* Expression Vitality (Shannon Entropy) */}
-              <div className="bg-[#121215] border border-[#27272a] rounded-xl p-4">
-                <div className="flex items-center justify-between text-[#71717a] text-xs font-mono mb-1">
-                  <span>Expression Entropy</span>
-                  <span className="text-amber-400 font-bold text-sm">
-                    {mode === 'camera' ? '1.82 bits' : `${currentSimFrame.entropy} bits`}
-                  </span>
-                </div>
-                <div className="text-xs font-mono text-[#a1a1aa] mt-1">
-                  H(X) = -Σ P(x) log₂ P(x)
-                </div>
-                <div className="text-[10px] text-[#71717a] mt-2">
-                  Quantifies dynamic expressive range
+                <div className="text-[10px] text-emerald-400 mt-2">
+                  WASM Client-Side Processing
                 </div>
               </div>
             </div>
