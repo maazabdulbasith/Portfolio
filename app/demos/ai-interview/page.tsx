@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
   ArrowLeft, Play, Pause, RotateCcw, Eye, Activity, 
   Smile, ShieldCheck, Zap, Sparkles, ExternalLink, Camera, 
-  VideoOff, RefreshCw, CheckCircle2, AlertCircle, Compass, Layers
+  VideoOff, RefreshCw, CheckCircle2, AlertCircle, Compass, Layers, Key
 } from 'lucide-react'
 
 // Pinned Landmark constants from ai-video
@@ -94,6 +94,10 @@ export default function AIInterviewDemo() {
   const [showMesh, setShowMesh] = useState(true)
   const [archTab, setArchTab] = useState<'edge' | 'server'>('edge')
 
+  // Client API key override state
+  const [userApiKey, setUserApiKey] = useState('')
+  const [showKeyModal, setShowKeyModal] = useState(false)
+
   // Real AI Feedback State (Starts as null so NO fake stubs are shown!)
   const [feedback, setFeedback] = useState<{
     narrative: string
@@ -123,6 +127,9 @@ export default function AIInterviewDemo() {
     calibratedAt: 0,
     isProcessing: false,
     lastUiUpdate: 0,
+    sumYawDeviation: 0,
+    sumSmileRatio: 0,
+    lastSampleTime: 0,
   })
 
   // Start Real Camera Feed
@@ -152,6 +159,9 @@ export default function AIInterviewDemo() {
       calibratedAt: now + 5000,
       isProcessing: false,
       lastUiUpdate: 0,
+      sumYawDeviation: 0,
+      sumSmileRatio: 0,
+      lastSampleTime: 0,
     }
 
     try {
@@ -214,7 +224,7 @@ export default function AIInterviewDemo() {
     }
   }
 
-  // Stop Camera Feed & Trigger Real Gemini 1.5 Flash Analysis
+  // Stop Camera Feed & Trigger Real Behavioral Evaluation
   const stopCamera = async () => {
     if (timerIntervalRef.current) {
       clearInterval(timerIntervalRef.current)
@@ -244,21 +254,30 @@ export default function AIInterviewDemo() {
     setSessionStatus('analyzing')
     setIsAnalyzing(true)
 
-    // Call real Gemini API route with collected session telemetry
+    // Call real API route with collected session telemetry averages
     try {
-      const avgEye = tracker.current.totalFrames > 0 
-        ? Math.round((tracker.current.eyeContactFrames / tracker.current.totalFrames) * 100)
-        : 88
+      const totalSampled = tracker.current.totalFrames
+      const avgEye = totalSampled > 0 
+        ? Math.round((tracker.current.eyeContactFrames / totalSampled) * 100)
+        : 85
+      const avgYaw = totalSampled > 0
+        ? +(tracker.current.sumYawDeviation / totalSampled).toFixed(1)
+        : 1.8
+      const avgSmile = totalSampled > 0
+        ? +(tracker.current.sumSmileRatio / totalSampled).toFixed(2)
+        : 0.38
+      const avgEntropy = entropyLive > 0 ? entropyLive : 1.75
 
       const res = await fetch('/api/analyze-interview', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           eyeContactAvg: avgEye,
-          yawDeviationAvg: Math.abs(yawLive),
-          smileRatioAvg: smileLive || 0.38,
-          expressionVariety: entropyLive || 1.82,
-          timeline: tracker.current.sessionBuffer.slice(-15)
+          yawDeviationAvg: avgYaw,
+          smileRatioAvg: avgSmile,
+          expressionVariety: avgEntropy,
+          timeline: tracker.current.sessionBuffer.slice(-15),
+          apiKey: userApiKey || undefined
         })
       })
 
@@ -266,7 +285,7 @@ export default function AIInterviewDemo() {
       if (data.success) {
         setFeedback({
           narrative: data.narrative,
-          source: data.source === 'gemini-1.5-flash' ? 'Live Gemini 1.5 Flash' : 'Local Synthesizer',
+          source: data.source,
           strengths: data.strengths || ['Consistent camera eye-line focus', 'Calm composure maintained'],
           tips: data.tips || ['Keep natural posture when thinking']
         })
@@ -276,6 +295,45 @@ export default function AIInterviewDemo() {
     } finally {
       setIsAnalyzing(false)
       setSessionStatus('idle')
+    }
+  }
+
+  // Trigger Evaluation on 15s Simulated Telemetry
+  const evaluateSimulation = async () => {
+    setIsAnalyzing(true)
+    setFeedback(null)
+    try {
+      const avgEye = Math.round(SIMULATED_TIMELINE.reduce((acc, f) => acc + f.eyeContact, 0) / SIMULATED_TIMELINE.length)
+      const avgYaw = +(SIMULATED_TIMELINE.reduce((acc, f) => acc + Math.abs(f.yawDeg), 0) / SIMULATED_TIMELINE.length).toFixed(1)
+      const avgSmile = +(SIMULATED_TIMELINE.reduce((acc, f) => acc + f.smileRatio, 0) / SIMULATED_TIMELINE.length).toFixed(2)
+      const avgEntropy = +(SIMULATED_TIMELINE.reduce((acc, f) => acc + f.entropy, 0) / SIMULATED_TIMELINE.length).toFixed(2)
+
+      const res = await fetch('/api/analyze-interview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          eyeContactAvg: avgEye,
+          yawDeviationAvg: avgYaw,
+          smileRatioAvg: avgSmile,
+          expressionVariety: avgEntropy,
+          timeline: SIMULATED_TIMELINE,
+          apiKey: userApiKey || undefined
+        })
+      })
+
+      const data = await res.json()
+      if (data.success) {
+        setFeedback({
+          narrative: data.narrative,
+          source: data.source,
+          strengths: data.strengths || ['High ocular stability', 'Dynamic micro-expression range'],
+          tips: data.tips || ['Maintain steady gaze during cognitive pauses']
+        })
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setIsAnalyzing(false)
     }
   }
 
@@ -388,6 +446,9 @@ export default function AIInterviewDemo() {
           tracker.current.eyeContactFrames++
         }
 
+        tracker.current.sumYawDeviation += Math.abs(currentYawDeg)
+        tracker.current.sumSmileRatio += currentSmileRatio
+
         // Emotion Entropy Categorization
         if (!isLookingAtCamera) {
           tracker.current.emotionCounts.looking_away++
@@ -412,6 +473,28 @@ export default function AIInterviewDemo() {
         }
 
         const eyePct = Math.round((tracker.current.eyeContactFrames / tracker.current.totalFrames) * 100)
+
+        // Sample 1 telemetry frame per second into session buffer
+        if (now - tracker.current.lastSampleTime >= 1000) {
+          const elapsedSec = Math.floor((now - tracker.current.startTime) / 1000)
+          const currentEmotion = !isLookingAtCamera
+            ? 'Looking Away'
+            : currentSmileRatio > SMILE_THRESHOLD
+              ? 'Smiling'
+              : Math.abs(currentYawDeg) < 2.0
+                ? 'Engaged'
+                : 'Neutral'
+
+          tracker.current.sessionBuffer.push({
+            time: elapsedSec,
+            eyeContact: eyePct,
+            yawDeg: currentYawDeg,
+            tiltDeg: currentTiltDeg,
+            smileRatio: currentSmileRatio,
+            emotion: currentEmotion
+          })
+          tracker.current.lastSampleTime = now
+        }
 
         // Throttle React State updates to 4fps (250ms) to ensure smooth 60fps rendering
         if (now - tracker.current.lastUiUpdate > 250) {
@@ -545,6 +628,12 @@ export default function AIInterviewDemo() {
           </div>
 
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowKeyModal(!showKeyModal)}
+              className="text-xs font-mono text-cyan-400 border border-cyan-800/80 bg-cyan-950/40 px-2.5 py-1 rounded-md hover:bg-cyan-900/60 transition-colors flex items-center gap-1.5"
+            >
+              <Key className="w-3 h-3" /> {userApiKey ? 'Custom Key Set' : 'Custom Gemini Key (Optional)'}
+            </button>
             <a 
               href="https://github.com/maazabdulbasith/ai-video" 
               target="_blank" 
@@ -558,6 +647,45 @@ export default function AIInterviewDemo() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 py-8">
+        {/* Custom API Key Input Modal/Drawer */}
+        {showKeyModal && (
+          <div className="mb-6 p-4 rounded-lg bg-[#18181b] border border-[#27272a] font-mono text-xs space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-white font-semibold flex items-center gap-1.5">
+                <Key className="w-3.5 h-3.5 text-cyan-400" /> Client-Side Gemini API Key Override (Optional)
+              </span>
+              <button onClick={() => setShowKeyModal(false)} className="text-[#71717a] hover:text-white">✕</button>
+            </div>
+            <p className="text-[11px] text-[#a1a1aa] leading-relaxed">
+              Supply your own Google Gemini API key to run real-time inference directly against your project quota. 
+              Keys are strictly client-ephemeral and never written to disk or databases. If omitted, the high-precision Behavioral Telemetry Synthesizer evaluates your metrics.
+            </p>
+            <div className="flex gap-2 pt-1">
+              <input
+                type="password"
+                value={userApiKey}
+                onChange={(e) => setUserApiKey(e.target.value)}
+                placeholder="AIzaSy..."
+                className="flex-1 bg-[#09090b] border border-[#27272a] px-3 py-1.5 rounded text-white focus:outline-none focus:border-cyan-500 font-mono text-xs"
+              />
+              <button
+                onClick={() => setShowKeyModal(false)}
+                className="px-3.5 py-1.5 bg-cyan-500 text-black font-semibold rounded hover:bg-cyan-400 text-xs"
+              >
+                Save Key
+              </button>
+              {userApiKey && (
+                <button
+                  onClick={() => setUserApiKey('')}
+                  className="px-2.5 py-1.5 bg-[#27272a] text-[#a1a1aa] hover:text-white rounded text-xs"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Banner */}
         <div className="mb-8">
           <div className="flex flex-wrap items-center gap-2 mb-3">
@@ -571,7 +699,7 @@ export default function AIInterviewDemo() {
               geometry.py Threshold (0.08 rad)
             </span>
             <span className="text-[10px] font-mono bg-[#18181b] border border-[#27272a] px-2.5 py-1 rounded text-cyan-400 border-cyan-900">
-              Live Gemini 1.5 Flash API
+              Live Gemini 2.5 Flash API
             </span>
           </div>
 
@@ -582,7 +710,7 @@ export default function AIInterviewDemo() {
               </h1>
               <p className="text-sm text-[#a1a1aa] max-w-3xl leading-relaxed">
                 Test the actual production pipeline: MediaPipe FaceMesh tracks facial geometry and ocular vectors directly in your browser. 
-                When finished, your timeline is structured and sent to Gemini 1.5 Flash for executive coaching evaluation.
+                When finished, your timeline is structured and sent to Gemini 2.5 Flash for executive coaching evaluation.
               </p>
             </div>
 
@@ -754,6 +882,14 @@ export default function AIInterviewDemo() {
                     onChange={(e) => setSimTime(parseInt(e.target.value))}
                     className="w-full accent-cyan-500 cursor-pointer"
                   />
+
+                  <button
+                    onClick={evaluateSimulation}
+                    disabled={isAnalyzing}
+                    className="w-full mt-3 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-black font-semibold text-xs font-mono rounded-lg flex items-center justify-center gap-2 transition-colors shadow-lg shadow-cyan-500/20 disabled:opacity-50"
+                  >
+                    <Sparkles className="w-3.5 h-3.5" /> Evaluate 15s Window with AI
+                  </button>
                 </div>
               )}
             </div>
@@ -779,7 +915,7 @@ export default function AIInterviewDemo() {
                   />
                 </div>
                 <div className="text-[10px] text-[#71717a] mt-2">
-                  Target &gt; 80% (Threshold: |yaw| &le; 0.08)
+                  Target &gt; 80% (Threshold: |yaw| &le; 0.08 rad)
                 </div>
               </div>
 
@@ -790,7 +926,7 @@ export default function AIInterviewDemo() {
                   <span className={`text-sm font-bold ${
                     Math.abs(mode === 'camera' ? yawLive : currentSimFrame.yawDeg) > 4.6 ? 'text-amber-400' : 'text-emerald-400'
                   }`}>
-                    {mode === 'camera' ? `${yawLive > 0 ? `+${yawLive}` : yawLive}°` : `${currentSimFrame.yawDeg}°`}
+                    {mode === 'camera' ? `${yawLive > 0 ? `+${yawLive}` : yawLive} deg` : `${currentSimFrame.yawDeg} deg`}
                   </span>
                 </div>
                 <div className="text-xs font-mono text-[#a1a1aa] mt-1">
@@ -857,8 +993,8 @@ export default function AIInterviewDemo() {
               {isAnalyzing ? (
                 <div className="bg-[#09090b] border border-[#27272a] rounded p-5 text-center font-mono text-xs text-[#a1a1aa] space-y-2">
                   <RefreshCw className="w-5 h-5 text-amber-400 animate-spin mx-auto mb-2" />
-                  <div className="text-white font-semibold">Synthesizing Feedback with Gemini 1.5 Flash...</div>
-                  <div className="text-[11px] text-[#71717a]">Structuring {frameCountLive} frames of behavioral telemetry</div>
+                  <div className="text-white font-semibold">Synthesizing Feedback with AI Engine...</div>
+                  <div className="text-[11px] text-[#71717a]">Structuring telemetry into behavioral assessment</div>
                 </div>
               ) : feedback ? (
                 <div className="bg-[#09090b] border border-[#27272a] rounded p-3 text-xs font-mono text-[#e4e4e7] space-y-2">
