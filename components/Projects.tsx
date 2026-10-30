@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 interface Project {
   name: string
   url?: string
+  demoUrl?: string
   badge: string
   badgeType?: 'amber' | 'blue'
   tech: string
@@ -26,8 +27,9 @@ const PRODUCTION_PROJECTS: Project[] = [
   },
   {
     name: 'Wakat',
-    url: '/demos/wakat',
-    badge: 'Live Demo',
+    url: 'https://dev.wakat.me',
+    demoUrl: '/demos/wakat',
+    badge: 'Live Product',
     badgeType: 'amber',
     tech: 'Django · Celery · React · PostgreSQL',
     bullets: [
@@ -125,6 +127,16 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           >
             {project.badge}
           </span>
+        )}
+        {project.demoUrl && (
+          <a
+            href={project.demoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[11px] font-mono text-txt-tertiary hover:text-accent transition-colors border border-[#27272a] px-2 py-0.5 rounded hover:border-[#3f3f46]"
+          >
+            Inspect Cryptographic Architecture ↗
+          </a>
         )}
       </div>
 
