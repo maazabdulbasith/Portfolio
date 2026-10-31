@@ -70,7 +70,7 @@ const KNOWLEDGE_BASE: ShotItem[] = [
     id: 'shot-08',
     file: 'chat.png',
     title: 'Team Coordination Chat',
-    text: 'Meet at the blue door at 8:00 PM. Prashanth will bring the team credentials and repository keys.',
+    text: 'Meet at the blue door at 8:00 PM. Team credentials and repository keys will be provided.',
     caption: 'Chat message arranging a meeting at the blue door at 8 PM.',
     kind: 'chat',
   },
@@ -176,7 +176,7 @@ export async function POST(req: Request) {
       if ((qLower.includes('coffee') || qLower.includes('receipt') || qLower.includes('total') || qLower.includes('invoice') || qLower.includes('third wave')) && shot.file === 'receipt.png') score += 15
       if ((qLower.includes('cafe') || qLower.includes('latte') || qLower.includes('flat white') || qLower.includes('menu') || qLower.includes('avocado')) && shot.file === 'cafe.png') score += 15
       if ((qLower.includes('flight') || qLower.includes('gate') || qLower.includes('dubai') || qLower.includes('boarding') || qLower.includes('seat')) && shot.file === 'boarding.png') score += 15
-      if ((qLower.includes('prashanth') || qLower.includes('meet') || qLower.includes('meeting') || qLower.includes('credentials') || qLower.includes('chat')) && shot.file === 'chat.png') score += 15
+      if ((qLower.includes('meet') || qLower.includes('meeting') || qLower.includes('credentials') || qLower.includes('chat') || qLower.includes('blue door')) && shot.file === 'chat.png') score += 15
       if ((qLower.includes('docker') || qLower.includes('compose') || qLower.includes('redis') || qLower.includes('postgres') || qLower.includes('stack')) && shot.file === 'command.png') score += 15
       if ((qLower.includes('address') || qLower.includes('bengaluru') || qLower.includes('maple') || qLower.includes('indiranagar')) && shot.file === 'address.png') score += 15
       if ((qLower.includes('hnsw') || qLower.includes('pgvector') || qLower.includes('shelftoken07') || qLower.includes('indexing')) && shot.file === 'note-07.png') score += 15
@@ -275,7 +275,7 @@ Rules:
     } else if (topHit.file === 'boarding.png') {
       groundedSnippet = 'Airways Flight 6E-442 to Dubai (DXB) boards at 06:15 AM at Gate 12, Seat 14F, Zone 2.'
     } else if (topHit.file === 'chat.png') {
-      groundedSnippet = 'Meeting is at the blue door at 8:00 PM; Prashanth is bringing the team credentials and repository keys.'
+      groundedSnippet = 'Meeting is at the blue door at 8:00 PM; team credentials and repository keys will be provided.'
     } else if (topHit.file === 'command.png') {
       groundedSnippet = 'Command used: "docker compose up -d postgres redis langfuse" which started postgres, redis, and langfuse.'
     } else if (topHit.file === 'address.png') {
