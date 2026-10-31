@@ -1,233 +1,112 @@
-# Maaz Abdul Basith - Modern Portfolio
+# Abdul Basith Maaz — Engineering Portfolio & Interactive Demos
 
-A stunning, modern portfolio website built with Next.js 14, TypeScript, Tailwind CSS, and Framer Motion. Features a dark/light theme, smooth animations, and responsive design.
+> Production portfolio and live interactive systems engineering demos for **Abdul Basith Maaz** (Backend & GenAI Engineer).  
+> **Live Site:** [abdul-basith-maaz-portfolio.vercel.app](https://abdul-basith-maaz-portfolio.vercel.app/)
 
-## ✨ Features
+---
 
-### 🎨 Modern Design
-- **Dark/Light Theme Toggle** - Seamless theme switching with smooth transitions
-- **Gradient Text Effects** - Beautiful gradient typography throughout
-- **Glass Morphism** - Modern glass-like components with backdrop blur
-- **Responsive Design** - Perfect on all devices and screen sizes
-- **Smooth Animations** - Framer Motion powered animations and transitions
+## ⚡ Interactive Engineering Demos
 
-### 📱 Pages & Components
-- **Hero Section** - Animated landing with gradient backgrounds
-- **About Page** - Professional background and skills showcase
-- **Projects Page** - GitHub API integration with filtering
-- **Dashboard** - Analytics, stats, and progress tracking
-- **Calendar** - Interactive scheduling and event management
-- **FAQ** - Expandable questions with category filtering
-- **Contact** - Modern form with validation and animations
+This repository hosts both the primary portfolio showcase and fully interactive, zero-stub client/edge engineering demos showcasing production GenAI, computer vision, and cryptographic systems.
 
-### 🛠 Technical Stack
-- **Next.js 14** - App Router with server-side rendering
-- **TypeScript** - Full type safety and better development experience
-- **Tailwind CSS** - Utility-first CSS framework
-- **Framer Motion** - Smooth animations and transitions
-- **Lucide React** - Beautiful, customizable icons
-- **GitHub API** - Real-time project data integration
+### 1. [Shelf — Multi-Signal Hybrid Screenshot RAG Demo](https://abdul-basith-maaz-portfolio.vercel.app/demos/shelf)
+*Route: `/demos/shelf`*
 
-## 🚀 Getting Started
+* **Architecture:** Multi-signal hybrid retrieval combining OCR full-text sparse search, dense text embeddings (`bge-small-en-v1.5`), and visual semantic embeddings (`clip-vit-base-patch32`) in `pgvector`.
+* **Reciprocal Rank Fusion (RRF):** Implements ordinal rank fusion with smoothing constant $k=60$:
+  $$\text{RRF Score}(d) = \sum_{m \in M} \frac{1}{60 + r_m(d)}$$
+  Eliminates score normalization skew between disparate similarity spaces (BM25 vs. Cosine).
+* **Grounding & Guardrails:**
+  * **LlamaIndex Grounded Synthesizer:** Structured multi-source citation attribution directly linking answers to visual screenshot evidence.
+  * **Deterministic Injection Defense:** Detects indirect and direct prompt injection attempts (`ignore previous instructions`, jailbreak signatures), returning explicit refusal code `prompt_injection`.
+  * **Thin-Evidence Defense:** Rejects out-of-domain queries lacking sufficient token overlap with `thin_evidence` status code.
+* **Dataset:** 38 authentic golden-set test screenshots with interactive drag-and-drop local file ingestion.
 
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
+---
 
-### Installation
+### 2. [AI Mock Interview — Real-Time Edge Behavioral Telemetry](https://abdul-basith-maaz-portfolio.vercel.app/demos/ai-interview)
+*Route: `/demos/ai-interview`*
 
-1. **Clone the repository**
+* **Client-Side Edge Inference:** Migrated facial landmark extraction from a 60-second server Celery queue to a 5-second client-side WebAssembly execution using Google MediaPipe (`FaceMesh` 468 landmarks).
+* **Concurrency Mutex:** Implements a frame-processing queue mutex (`tracker.current.isProcessing`) preventing WebAssembly frame drift during 30 FPS video streaming.
+* **Deterministic Behavioral Metrics (Zero Stubs):**
+  * **Eye Contact Ratio:** Computed via 3D iris vector deviation relative to screen center.
+  * **Head Yaw Angle:** Computed from eye-to-nose geometry ($| \theta_{\text{yaw}} | > 18^\circ$ flag).
+  * **Smile Ratio & Expressiveness:** Measured via mouth corner Euclidean distance relative to lip height.
+  * **Shannon Expression Entropy:** Rolling quantitative measurement of dynamic facial variance over 2-second windows.
+* **LLM Synthesis:** Integrated with `gemini-2.5-flash` for qualitative evaluation, backed by an exact quantitative Behavioral Telemetry Synthesizer fallback.
+
+---
+
+### 3. [Wakat — ZATCA Phase 2 E-Invoicing Ledger & TLV Inspector](https://abdul-basith-maaz-portfolio.vercel.app/demos/wakat)
+*Route: `/demos/wakat` | Live Product: [dev.wakat.me](https://dev.wakat.me)*
+
+* **Cryptographic TLV QR Decoder:** Interactive byte-level parser for Saudi ZATCA Phase 2 tax authority QR codes, decoding standard 9-tag binary structures:
+  1. Seller Name (UTF-8)
+  2. VAT Registration Number
+  3. Invoice Timestamp (ISO 8601)
+  4. Invoice Total (with VAT)
+  5. VAT Total Amount
+  6. Hex-encoded SHA-256 XML Invoice Digest
+  7. ECDSA Digital Signature
+  8. Cryptographic Public Key
+  9. X.509 Compliance Stamp Certificate
+* **Hash-Chain Visualizer:** Demonstrates sequential cryptographic ledger integrity:
+  $$\text{Invoice Hash}_n = \text{SHA-256}(\text{Invoice XML}_n \mathbin{\Vert} \text{Invoice Hash}_{n-1})$$
+  Preventing retroactive invoice tampering or ledger deletion.
+
+---
+
+### 4. [Complia.in](https://complia.in)
+*Live Product: [complia.in](https://complia.in)*
+
+* AI-powered tax notice clarification engine decoding Indian GST (ASMT-10, DRC-01) and Income Tax notices into plain English with root-cause explanations and severity classifications.
+* Multi-attribute search and keyword trigger indexing to resolve statutory deadlines and actionable mitigation checklists.
+
+---
+
+## 🛠 Tech Stack
+
+* **Framework:** Next.js 14 (App Router, Server Actions, Route Handlers)
+* **Language:** TypeScript 5 (Strict Mode)
+* **Styling & Animation:** Tailwind CSS, Framer Motion, Lucide React
+* **AI & Vision:** Google MediaPipe (FaceMesh WASM), Google Gemini 2.5 Flash API, LlamaIndex-style structured RAG
+* **Deployment:** Vercel Edge / Serverless Runtime
+
+---
+
+## 💻 Local Development
+
+1. **Clone the repository:**
    ```bash
-   git clone <your-repo-url>
-   cd MyPortfolio
+   git clone https://github.com/maazabdulbasith/Portfolio.git
+   cd Portfolio
    ```
 
-2. **Install dependencies**
+2. **Install dependencies:**
    ```bash
    npm install
    ```
 
-3. **Run the development server**
+3. **Configure Environment Variables (Optional):**
+   Create a `.env.local` file:
+   ```env
+   GEMINI_API_KEY=your_gemini_api_key_here
+   ```
+   *(Note: All demos have client-side key overrides and deterministic rule engines, meaning the app runs completely out-of-the-box even without an API key).*
+
+4. **Start the development server:**
    ```bash
    npm run dev
    ```
+   Open `http://localhost:3000` in your browser.
 
-4. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
-
-## 📁 Project Structure
-
-```
-MyPortfolio/
-├── app/                    # Next.js App Router
-│   ├── layout.tsx         # Root layout with theme context
-│   ├── page.tsx           # Home page with hero section
-│   ├── about/             # About page
-│   ├── projects/          # Projects showcase
-│   ├── dashboard/         # Analytics dashboard
-│   ├── calendar/          # Interactive calendar
-│   ├── faq/              # FAQ with filtering
-│   ├── contact/           # Contact form
-│   └── globals.css        # Global styles
-├── components/            # Reusable components
-│   ├── Navigation.tsx     # Main navigation
-│   ├── ProjectCard.tsx    # Project display cards
-│   ├── SkillsShowcase.tsx # Skills with progress bars
-│   ├── ContactForm.tsx    # Contact form with validation
-│   └── AnimatedSection.tsx # Animation wrapper
-├── public/               # Static assets
-└── tailwind.config.js    # Tailwind configuration
-```
-
-## 🎯 Key Components
-
-### Navigation
-- Responsive navigation with mobile menu
-- Theme toggle functionality
-- Smooth scroll navigation
-- Active page highlighting
-
-### ProjectCard
-- Hover animations and effects
-- Technology tags display
-- GitHub and live link integration
-- Featured project highlighting
-
-### SkillsShowcase
-- Animated progress bars
-- Category-based organization
-- Icon integration
-- Responsive grid layout
-
-### ContactForm
-- Real-time validation
-- Success/error states
-- Loading animations
-- Contact information display
-
-## 🎨 Customization
-
-### Colors & Themes
-The portfolio uses a custom color palette defined in `tailwind.config.js`:
-
-```javascript
-colors: {
-  primary: {
-    400: '#60a5fa',
-    500: '#3b82f6',
-    600: '#2563eb',
-  },
-  secondary: {
-    400: '#a78bfa',
-    500: '#8b5cf6',
-    600: '#7c3aed',
-  },
-  dark: {
-    800: '#1f2937',
-    900: '#111827',
-  }
-}
-```
-
-### Adding New Pages
-1. Create a new directory in `app/`
-2. Add a `page.tsx` file
-3. Update navigation in `components/Navigation.tsx`
-
-### Customizing Content
-- Update personal information in respective page components
-- Modify GitHub username in projects page for API integration
-- Customize skills and experience in dashboard and about pages
-
-## 📊 Performance Features
-
-- **Image Optimization** - Next.js automatic image optimization
-- **Code Splitting** - Automatic route-based code splitting
-- **Lazy Loading** - Components load only when needed
-- **SEO Optimized** - Meta tags and structured data
-- **Accessibility** - ARIA labels and keyboard navigation
-
-## 🔧 Development
-
-### Available Scripts
-
-```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run start        # Start production server
-npm run lint         # Run ESLint
-npm run type-check   # Run TypeScript compiler
-```
-
-### Environment Variables
-
-Create a `.env.local` file for environment variables:
-
-```env
-NEXT_PUBLIC_GITHUB_USERNAME=your-github-username
-NEXT_PUBLIC_EMAIL=your-email@example.com
-```
-
-## 🚀 Deployment
-
-### Vercel (Recommended)
-1. Connect your GitHub repository to Vercel
-2. Configure environment variables
-3. Deploy automatically on push
-
-### Other Platforms
-- **Netlify** - Configure build settings
-- **AWS Amplify** - Connect repository and deploy
-- **Docker** - Use provided docker-compose.yml
-
-## 📱 Mobile Responsiveness
-
-The portfolio is fully responsive with:
-- Mobile-first design approach
-- Touch-friendly interactions
-- Optimized navigation for mobile
-- Responsive typography and spacing
-
-## 🎭 Animations
-
-Built with Framer Motion for smooth animations:
-- Page transitions
-- Component entrance animations
-- Hover effects
-- Loading states
-- Scroll-triggered animations
-
-## 🔒 Security
-
-- **Input Validation** - Form validation and sanitization
-- **XSS Protection** - Content Security Policy
-- **HTTPS** - Secure connections in production
-- **API Rate Limiting** - GitHub API usage limits
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- **Next.js Team** - For the amazing framework
-- **Tailwind CSS** - For the utility-first CSS
-- **Framer Motion** - For smooth animations
-- **Lucide** - For beautiful icons
+5. **Production Build:**
+   ```bash
+   npm run build
+   ```
 
 ---
 
-**Built with ❤️ by Maaz Abdul Basith**
-
-Connect with me:
-- [GitHub](https://github.com/maazabdulbasith)
-- [LinkedIn](https://linkedin.com/in/abdul-basith-maaz)
-- [Email](mailto:maazabdulbasith@gmail.com) 
+## 📄 License
+MIT © [Abdul Basith Maaz](https://github.com/maazabdulbasith)
