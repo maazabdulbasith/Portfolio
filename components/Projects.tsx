@@ -65,7 +65,7 @@ const PERSONAL_PROJECTS: Project[] = [
   },
   {
     name: 'Shelf',
-    url: 'https://shelf-pictures.vercel.app',
+    url: 'https://theonlyshelf.vercel.app',
     demoUrl: '/demos/shelf',
     badge: 'Live Product',
     badgeType: 'amber',
@@ -73,7 +73,7 @@ const PERSONAL_PROJECTS: Project[] = [
     bullets: [
       'Built a local-first screenshot search engine that fuses OCR full-text, bge text embeddings, and CLIP image embeddings in pgvector with reciprocal rank fusion (RRF) and reranking. Hybrid recall@5 reached 1.0 and MRR 0.9028 on 12 golden queries (full-text alone 0.833).',
       'Engineered LangGraph ingestion state machine and LlamaIndex-grounded Ask synthesizer citing exact screenshot evidence while refusing thin evidence and adversarial prompt injections.',
-      'Shipped both as a standalone web application (shelf-pictures.vercel.app) and an interactive mathematical decomposition demo with zero-knowledge client privacy.',
+      'Shipped both as a standalone web application (theonlyshelf.vercel.app) and an interactive mathematical decomposition demo with zero-knowledge client privacy.',
     ],
   },
 ]
