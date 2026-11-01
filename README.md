@@ -10,7 +10,7 @@
 This repository hosts both the primary portfolio showcase and fully interactive, zero-stub client/edge engineering demos showcasing production GenAI, computer vision, and cryptographic systems.
 
 ### 1. [Shelf — Multi-Signal Hybrid Screenshot RAG Demo](https://abdul-basith-maaz-portfolio.vercel.app/demos/shelf)
-*Route: `/demos/shelf`*
+*Route: `/demos/shelf` | Live Web App: [theonlyshelf.vercel.app](https://theonlyshelf.vercel.app)*
 
 * **Architecture:** Multi-signal hybrid retrieval combining OCR full-text sparse search, dense text embeddings (`bge-small-en-v1.5`), and visual semantic embeddings (`clip-vit-base-patch32`) in `pgvector`.
 * **Reciprocal Rank Fusion (RRF):** Implements ordinal rank fusion with smoothing constant $k=60$:

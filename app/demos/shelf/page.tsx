@@ -466,6 +466,16 @@ export default function ShelfDemo() {
 
           <div className="flex items-center gap-3">
             <a 
+              href="https://theonlyshelf.vercel.app" 
+              target="_blank" 
+              rel="noreferrer"
+              className="text-xs font-mono text-[#e4b15a] hover:text-white flex items-center gap-1.5 transition-colors border border-[#e4b15a]/40 bg-[#e4b15a]/10 px-2.5 py-1 rounded"
+              title="Open standalone web application"
+            >
+              <span>Live Web App</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+            <a 
               href="https://github.com/maazabdulbasith/shelf" 
               target="_blank" 
               rel="noreferrer"
