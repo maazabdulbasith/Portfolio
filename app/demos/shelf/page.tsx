@@ -459,7 +459,7 @@ export default function ShelfDemo() {
             <div className="flex items-center gap-2">
               <span className="font-semibold text-sm tracking-tight text-white">Shelf</span>
               <span className="text-[11px] font-mono bg-[#e4b15a]/10 text-[#e4b15a] border border-[#e4b15a]/30 px-2 py-0.5 rounded">
-                Live Screenshot Search + RAG
+                Live Product · Public Beta
               </span>
             </div>
           </div>
