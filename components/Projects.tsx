@@ -65,14 +65,15 @@ const PERSONAL_PROJECTS: Project[] = [
   },
   {
     name: 'Shelf',
-    url: '/demos/shelf',
-    badge: 'Live Demo',
-    badgeType: 'blue',
+    url: 'https://shelf-pictures.vercel.app',
+    demoUrl: '/demos/shelf',
+    badge: 'Live Product',
+    badgeType: 'amber',
     tech: 'FastAPI · Next.js · pgvector · LangGraph · LlamaIndex',
     bullets: [
-      'Building screenshot search that fuses OCR full-text, bge text embeddings, and CLIP image embeddings in pgvector with reciprocal rank fusion and reranking. Hybrid recall@5 was 1.0 and MRR 0.90 on 12 queries (full-text alone 0.83).',
-      'LangGraph ingest and LlamaIndex Ask cite sources and refuse thin evidence and prompt injection, with a keyless CI gate (action precision 1.0). Encrypted sync, in progress, keeps ciphertext on the server and embeddings on the device.',
-      'Local-first privacy architecture: built for users who capture screenshots instead of notes, ensuring private images and embeddings never leave the device.',
+      'Built a local-first screenshot search engine that fuses OCR full-text, bge text embeddings, and CLIP image embeddings in pgvector with reciprocal rank fusion (RRF) and reranking. Hybrid recall@5 reached 1.0 and MRR 0.9028 on 12 golden queries (full-text alone 0.833).',
+      'Engineered LangGraph ingestion state machine and LlamaIndex-grounded Ask synthesizer citing exact screenshot evidence while refusing thin evidence and adversarial prompt injections.',
+      'Shipped both as a standalone web application (shelf-pictures.vercel.app) and an interactive mathematical decomposition demo with zero-knowledge client privacy.',
     ],
   },
 ]
@@ -135,7 +136,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             rel="noopener noreferrer"
             className="text-[11px] font-mono text-txt-tertiary hover:text-accent transition-colors border border-[#27272a] px-2 py-0.5 rounded hover:border-[#3f3f46]"
           >
-            Inspect Cryptographic Architecture ↗
+            {project.name === 'Shelf' ? 'Inspect RRF Architecture ↗' : 'Inspect Cryptographic Architecture ↗'}
           </a>
         )}
       </div>
