@@ -65,7 +65,7 @@ const cardVariant = {
 
 export default function Experience() {
   return (
-    <div className="space-y-12">
+    <div className="space-y-10">
       {EXPERIENCE.map((exp, i) => (
         <motion.div
           key={exp.role + exp.company}
@@ -74,52 +74,54 @@ export default function Experience() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-60px' }}
-          className="accent-border-card relative py-6"
+          className="accent-border-card relative py-4"
         >
           <div className="timeline-dot" />
 
           {/* Header */}
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-1">
-            <span className="text-lg font-semibold text-txt-primary">
+            <span className="text-xl font-bold text-slate-900">
               {exp.role}
             </span>
-            <span className="text-sm font-medium text-accent">
+            <span className="text-sm font-semibold text-accent">
               {exp.company}
             </span>
             {exp.location && (
-              <span className="text-xs text-txt-tertiary">{exp.location}</span>
+              <span className="text-xs font-medium text-slate-500 bg-[#FAF7F2] border border-[#E8E2D8] px-2.5 py-0.5 rounded-full">
+                {exp.location}
+              </span>
             )}
           </div>
           <p
-            className={`text-xs text-txt-tertiary tracking-wider ${
+            className={`text-xs font-semibold text-slate-500 ${
               exp.previousRole ? 'mb-1' : 'mb-4'
             }`}
           >
             {exp.date}
           </p>
           {exp.previousRole && exp.previousDate && (
-            <p className="text-xs text-txt-tertiary tracking-wider mb-4">
+            <p className="text-xs font-medium text-slate-500 mb-4">
               Previously {exp.previousRole} · {exp.previousDate}
             </p>
           )}
 
           {/* Bullets */}
-          <ul className="space-y-2.5">
+          <ul className="space-y-3">
             {exp.bullets.map((bullet, j) => {
               const isObj = typeof bullet === 'object'
               return (
                 <li
                   key={j}
-                  className="relative pl-5 text-[13px] text-txt-secondary leading-[1.75]"
+                  className="relative pl-5 text-sm text-slate-600 leading-relaxed"
                 >
-                  <span className="absolute left-0 text-txt-tertiary">
-                    —
+                  <span className="absolute left-0 text-accent font-bold">
+                    •
                   </span>
                   {isObj ? (
                     <>
                       {bullet.text}
                       {bullet.callout && (
-                        <span className="callout-badge ml-2 text-[10px]">
+                        <span className="inline-flex items-center ml-2 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-accent border border-rose-200">
                           {bullet.callout}
                         </span>
                       )}

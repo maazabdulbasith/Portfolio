@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { ArrowUpRight } from 'lucide-react'
 
 interface Project {
   name: string
@@ -81,7 +82,7 @@ const PERSONAL_PROJECTS: Project[] = [
 ]
 
 const cardVariant = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 15 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
@@ -108,38 +109,36 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       className="accent-border-card py-6"
     >
       {/* Header */}
-      <div className="flex flex-wrap items-center gap-2.5 mb-2">
+      <div className="flex flex-wrap items-center gap-3 mb-2">
         {project.url ? (
           <a
             href={project.url}
             target={project.url.startsWith('http') ? '_blank' : '_self'}
             rel="noopener noreferrer"
-            className="text-[17px] font-semibold text-txt-primary hover:text-accent transition-colors inline-flex items-center gap-1.5 group"
+            className="text-lg font-bold text-slate-900 hover:text-accent transition-colors inline-flex items-center gap-1.5 group"
           >
             <span>{project.name}</span>
-            <span className="text-xs text-txt-tertiary group-hover:text-accent transition-colors font-mono">
-              ↗
-            </span>
+            <ArrowUpRight className="w-4 h-4 text-slate-400 group-hover:text-accent transition-colors" />
           </a>
         ) : (
-          <span className="text-[17px] font-semibold text-txt-primary">
+          <span className="text-lg font-bold text-slate-900">
             {project.name}
           </span>
         )}
 
         {project.badge && (
           <span
-            className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[10px] font-mono font-semibold uppercase tracking-wider ${
+            className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-semibold tracking-wide ${
               isEmerald
-                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25'
+                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                 : isBlue
-                ? 'bg-blue-500/10 text-blue-400 border border-blue-500/25'
-                : 'callout-badge'
+                ? 'bg-indigo-50 text-indigo-700 border border-indigo-200'
+                : 'bg-rose-50 text-accent border border-rose-200'
             }`}
           >
             <span 
-              className={`w-1 h-1 rounded-full ${
-                isEmerald ? 'bg-emerald-400' : isBlue ? 'bg-blue-400' : 'bg-accent'
+              className={`w-1.5 h-1.5 rounded-full ${
+                isEmerald ? 'bg-emerald-500' : isBlue ? 'bg-indigo-500' : 'bg-accent'
               }`} 
             />
             {project.badge}
@@ -151,25 +150,25 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             href={project.demoUrl}
             target={project.demoUrl.startsWith('http') ? '_blank' : '_self'}
             rel="noopener noreferrer"
-            className="text-[11px] font-mono text-txt-tertiary hover:text-accent transition-colors border border-[#27272a] px-2.5 py-0.5 rounded hover:border-[#3f3f46]"
+            className="text-xs font-semibold text-slate-600 hover:text-accent transition-colors bg-[#FAF7F2] border border-[#E8E2D8] hover:border-slate-400 px-3 py-1 rounded-full"
           >
             {project.name === 'Shelf' ? 'Inspect RRF Architecture ↗' : project.name === 'Wakat' ? 'Cryptographic Sandbox ↗' : 'Launch In-Browser Demo ↗'}
           </a>
         )}
       </div>
 
-      <p className="text-xs text-txt-tertiary tracking-wide mb-3.5">
+      <p className="text-xs font-medium text-slate-500 tracking-wide mb-3">
         {project.tech}
       </p>
 
-      <ul className="space-y-2">
+      <ul className="space-y-2.5">
         {project.bullets.map((bullet, j) => (
           <li
             key={j}
-            className="relative pl-5 text-[13px] text-txt-secondary leading-[1.75]"
+            className="relative pl-5 text-sm text-slate-600 leading-relaxed"
           >
-            <span className="absolute left-0 text-txt-tertiary">
-              —
+            <span className="absolute left-0 text-accent font-bold">
+              •
             </span>
             {bullet}
           </li>
@@ -184,15 +183,15 @@ export default function Projects() {
     <div className="space-y-12">
       {/* Section 1: Production & Shipped Systems */}
       <div>
-        <div className="flex items-center justify-between border-b border-surface-3 pb-3 mb-1">
-          <p className="text-[10px] font-semibold tracking-[2px] uppercase text-txt-tertiary">
+        <div className="flex items-center justify-between border-b border-[#E8E2D8] pb-3 mb-2">
+          <p className="text-xs font-bold tracking-wider uppercase text-slate-500">
             Flagship &amp; Production Systems
           </p>
         </div>
         <div className="space-y-0">
           {PRODUCTION_PROJECTS.map((project, i) => (
             <div key={project.name}>
-              {i > 0 && <hr className="border-t border-surface-3 my-0" />}
+              {i > 0 && <hr className="border-t border-[#E8E2D8] my-0" />}
               <ProjectCard project={project} index={i} />
             </div>
           ))}
@@ -201,23 +200,23 @@ export default function Projects() {
 
       {/* Section 2: "Built because I wanted to" */}
       <div>
-        <div className="flex flex-wrap items-baseline justify-between border-b border-surface-3 pb-3 mb-1 gap-2">
+        <div className="flex flex-wrap items-baseline justify-between border-b border-[#E8E2D8] pb-3 mb-2 gap-2">
           <div>
-            <h3 className="text-sm font-semibold tracking-[2px] uppercase text-accent">
+            <h3 className="text-sm font-bold tracking-wider uppercase text-accent">
               Independent Tools &amp; Products
             </h3>
-            <p className="text-xs text-txt-tertiary mt-0.5">
+            <p className="text-xs text-slate-500 mt-0.5">
               Consumer utilities built to solve specific workflow gaps.
             </p>
           </div>
-          <span className="callout-badge text-[10px] blue">
+          <span className="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
             Personal Projects
           </span>
         </div>
         <div className="space-y-0">
           {PERSONAL_PROJECTS.map((project, i) => (
             <div key={project.name}>
-              {i > 0 && <hr className="border-t border-surface-3 my-0" />}
+              {i > 0 && <hr className="border-t border-[#E8E2D8] my-0" />}
               <ProjectCard
                 project={project}
                 index={i + PRODUCTION_PROJECTS.length}

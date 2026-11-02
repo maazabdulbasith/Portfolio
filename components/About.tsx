@@ -9,68 +9,72 @@ interface SkillGroup {
 
 const SKILL_GROUPS: SkillGroup[] = [
   {
-    label: 'Backend',
+    label: 'Backend & System Design',
     skills: [
       'Python',
       'Django',
       'Django REST Framework',
       'FastAPI',
       'REST APIs',
-      'JWT',
+      'JWT Authentication',
       'Webhooks',
-      'Redis',
-      'OpenAPI',
+      'Redis Caching',
+      'OpenAPI Spec',
       'API Versioning',
-      'System Design',
-      'Razorpay',
-      'STC Pay',
-      'Dhamen Pay',
+      'Microservices',
+      'Payment Gateways (Razorpay, STC Pay, Dhamen Pay)',
     ],
   },
   {
-    label: 'Frontend',
-    skills: ['TypeScript', 'JavaScript', 'React.js', 'Next.js'],
+    label: 'AI, Agents & Multimodal',
+    skills: [
+      'LangGraph',
+      'LlamaIndex',
+      'RAG & Hybrid Search',
+      'pgvector & Embeddings',
+      'Gemini 2.5 Flash',
+      'Claude 3.5 Sonnet',
+      'MediaPipe WASM',
+      'Whisper Audio Pipeline',
+      'Computer Vision',
+      'Prompt Injection Defenses',
+    ],
   },
   {
-    label: 'Databases',
+    label: 'Databases & Storage',
     skills: [
       'PostgreSQL',
       'pgvector',
-      'Vector Databases',
-      'Embeddings',
-      'SQL',
+      'Reciprocal Rank Fusion (RRF)',
+      'Vector Search',
+      'SQL Optimization',
       'MongoDB',
     ],
   },
   {
-    label: 'Cloud & DevOps',
-    skills: ['GCP', 'Docker', 'Jenkins', 'CI/CD', 'Linux', 'Git'],
+    label: 'Cloud, DevOps & Infrastructure',
+    skills: [
+      'Google Cloud Platform (GCP)',
+      'Docker',
+      'Jenkins',
+      'CI/CD Pipelines',
+      'Linux Server Administration',
+      'Git & GitHub Actions',
+    ],
   },
   {
-    label: 'Testing',
+    label: 'Testing & Reliability',
     skills: [
       'pytest',
-      'Unit Testing',
+      'Regression Testing',
       'Integration Testing',
-      'Performance Optimization',
+      'Performance Profiling',
+      'Latency Optimization',
     ],
   },
   {
-    label: 'AI/ML',
-    skills: [
-      'RAG',
-      'Hybrid Search',
-      'LangGraph',
-      'LlamaIndex',
-      'Gemini',
-      'Azure OpenAI',
-      'Claude',
-      'Mistral',
-      'MediaPipe',
-      'Computer Vision',
-      'Whisper',
-      'Parakeet',
-    ],
+    label: 'Frontend & UI',
+    skills: ['TypeScript', 'JavaScript', 'React.js', 'Next.js 14', 'Tailwind CSS'],
   },
 ]
 
@@ -102,24 +106,32 @@ const tagVariant = {
 
 export default function About() {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
       {/* Bio text (Left column) */}
-      <div className="lg:col-span-5">
+      <div className="lg:col-span-5 space-y-4">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-[15px] md:text-[16px] font-light leading-[1.85] text-txt-secondary"
+          className="text-base font-normal leading-relaxed text-slate-600"
         >
-          <strong className="text-txt-primary font-medium">
-            Backend-focused Software Engineer
+          <strong className="text-slate-900 font-semibold">
+            Backend &amp; GenAI Engineer
           </strong>{' '}
           with production ownership across five SaaS products, including a
           FastAPI platform serving 50K+ users. Experienced in Django, FastAPI,
           PostgreSQL, Redis, payment integrations, GCP deployments, and
-          zero-downtime migrations. Independently took Waddi&apos;s client-facing
-          CRM from ideation to production as sole developer.
+          zero-downtime migrations.
+        </motion.p>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="text-base font-normal leading-relaxed text-slate-600"
+        >
+          Shipped ZATCA Phase 2 cryptographic e-invoicing for Saudi enterprise clients, and engineered Shelf — an agentic multimodal visual search product utilizing LangGraph, pgvector RRF, and on-device WebAssembly OCR.
         </motion.p>
       </div>
 
@@ -134,10 +146,10 @@ export default function About() {
         >
           {SKILL_GROUPS.map((group) => (
             <motion.div key={group.label} variants={itemVariant} className="space-y-2">
-              <p className="text-[10px] font-semibold tracking-[2px] uppercase text-accent">
+              <p className="text-xs font-bold uppercase tracking-wider text-accent">
                 {group.label}
               </p>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-2">
                 {group.skills.map((skill) => (
                   <motion.span
                     key={skill}

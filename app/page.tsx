@@ -62,67 +62,65 @@ export default function Home() {
         <FeaturedSystems />
 
         {/* 3. Production Work Experience (Directly Visible) */}
-        <section id="work" className="py-20 md:py-28 border-t border-surface-3 relative scroll-mt-14">
+        <section id="work" className="py-20 md:py-28 border-t border-[#E8E2D8] relative scroll-mt-16">
           <div className="max-w-[1100px] mx-auto px-5 md:px-10">
             {/* Header */}
             <div className="mb-14">
               <div className="flex items-center gap-2 mb-3">
-                <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                <span className="text-[11px] font-mono uppercase tracking-[3px] text-accent font-semibold">
+                <span className="w-2.5 h-2.5 rounded-full bg-accent animate-pulse" />
+                <span className="text-xs font-bold uppercase tracking-wider text-accent font-sans">
                   Proven Track Record
                 </span>
               </div>
-              <h2 className="font-display text-section text-txt-primary leading-[1.05]">
-                PRODUCTION EXPERIENCE
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.1]">
+                Production Experience
               </h2>
-              <p className="text-sm md:text-base text-txt-secondary max-w-2xl mt-3 leading-relaxed">
+              <p className="text-base sm:text-lg text-slate-600 max-w-2xl mt-3 leading-relaxed">
                 Full-lifecycle backend engineering, architectural migrations, and multi-tenant SaaS scaling under production workloads.
               </p>
             </div>
 
             {/* Experience Card */}
-            <div className="glass-card p-6 md:p-10 shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-1 h-full bg-accent opacity-70" />
+            <div className="bg-white border border-[#E8E2D8] rounded-3xl p-6 sm:p-10 shadow-[0_10px_35px_rgba(28,25,23,0.04)] relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-1.5 h-full bg-accent rounded-l" />
               <Experience />
             </div>
           </div>
         </section>
 
         {/* 4. Complete Catalog & Deep-Dives (Interactive Tabs) */}
-        <section id="archive" ref={archiveRef} className="py-20 md:py-28 border-t border-surface-3 relative scroll-mt-14">
+        <section id="archive" ref={archiveRef} className="py-20 md:py-28 border-t border-[#E8E2D8] relative scroll-mt-16">
           <div className="max-w-[1100px] mx-auto px-5 md:px-10">
             {/* Header */}
             <div className="mb-14">
               <div className="flex items-center gap-2 mb-3">
-                <span className="w-2 h-2 rounded-full bg-txt-tertiary" />
-                <span className="text-[11px] font-mono uppercase tracking-[3px] text-txt-tertiary font-semibold">
+                <span className="w-2.5 h-2.5 rounded-full bg-slate-400" />
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 font-sans">
                   Complete Catalog &amp; Foundations
                 </span>
               </div>
-              <h2 className="font-display text-section text-txt-primary leading-[1.05]">
-                PROJECT ARCHIVE &amp; SKILLS
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.1]">
+                Project Archive &amp; Skills
               </h2>
-              <p className="text-sm md:text-base text-txt-secondary max-w-2xl mt-3 leading-relaxed">
+              <p className="text-base sm:text-lg text-slate-600 max-w-2xl mt-3 leading-relaxed">
                 Deep-dive into independent consumer utilities, technical skills taxonomy, academic credentials, and open-source GitHub telemetry.
               </p>
             </div>
 
             {/* Dashboard Container Card */}
-            <div className="glass-card p-6 md:p-10 shadow-2xl relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-1 h-full bg-surface-4" />
-
-              {/* Tabs */}
-              <div className="flex flex-wrap gap-2 md:gap-4 border-b border-surface-3 pb-6 mb-8">
+            <div className="bg-white border border-[#E8E2D8] rounded-3xl p-6 sm:p-10 shadow-[0_10px_35px_rgba(28,25,23,0.04)] relative overflow-hidden">
+              {/* Tabs Bar */}
+              <div className="flex flex-wrap gap-2 md:gap-3 border-b border-[#E8E2D8] pb-6 mb-8">
                 {ARCHIVE_TABS.map((tab) => {
                   const isActive = activeTab === tab.id
                   return (
                     <button
                       key={tab.id}
                       onClick={() => handleTabClick(tab.id)}
-                      className={`px-4 py-2.5 text-[11px] font-semibold tracking-[2px] uppercase rounded-md relative transition-all duration-300 ${
+                      className={`px-4 py-2.5 text-xs font-bold tracking-wide rounded-xl transition-all duration-200 ${
                         isActive
-                          ? 'text-bg bg-accent'
-                          : 'text-txt-secondary hover:text-txt-primary hover:bg-surface-3'
+                          ? 'text-white bg-accent shadow-[0_4px_14px_rgba(224,83,60,0.25)]'
+                          : 'text-slate-600 hover:text-slate-900 hover:bg-[#FAF7F2]'
                       }`}
                     >
                       {tab.label}

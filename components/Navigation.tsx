@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { ArrowUpRight } from 'lucide-react'
 
 const NAV_ITEMS = [
   { label: 'Live Systems', href: '#featured' },
@@ -17,7 +18,7 @@ export default function Navigation() {
   const [activeSection, setActiveSection] = useState('')
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40)
+    const handleScroll = () => setScrolled(window.scrollY > 30)
 
     const handleHash = () => {
       const hash = window.location.hash.slice(1)
@@ -43,12 +44,12 @@ export default function Navigation() {
   return (
     <>
       <motion.nav
-        initial={{ y: -80 }}
+        initial={{ y: -70 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 right-0 z-[1000] h-14 flex items-center transition-all duration-300 ${
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className={`fixed top-0 left-0 right-0 z-[1000] h-16 flex items-center transition-all duration-300 ${
           scrolled
-            ? 'bg-surface-0/85 backdrop-blur-xl border-b border-surface-3'
+            ? 'bg-[#FAF7F2]/90 backdrop-blur-md border-b border-[#E8E2D8]/80 shadow-[0_4px_20px_rgba(0,0,0,0.03)]'
             : 'bg-transparent'
         }`}
       >
@@ -61,33 +62,32 @@ export default function Navigation() {
               window.dispatchEvent(new Event('hashchange'))
               window.scrollTo({ top: 0, behavior: 'smooth' })
             }}
-            className="font-display text-xl tracking-[2px] text-txt-primary hover:opacity-100 flex items-center gap-1.5"
+            className="group flex items-center gap-2 font-display text-lg font-bold tracking-tight text-slate-900"
           >
-            <span>MAA<span className="text-accent">Z</span></span>
-            <span className="w-1.5 h-1.5 rounded-full bg-accent/80 animate-pulse hidden sm:inline-block" />
+            <span className="w-2.5 h-2.5 rounded-full bg-accent group-hover:scale-125 transition-transform" />
+            <span>Abdul Basith <span className="text-accent font-extrabold">Maaz</span></span>
           </a>
 
           {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-7">
             <ul className="flex items-center gap-6">
               {NAV_ITEMS.map((item) => (
                 <li key={item.href}>
                   <a
                     href={item.href}
-                    className={`relative text-[10px] font-semibold tracking-[1.5px] uppercase transition-colors duration-250 ${
+                    className={`relative text-xs font-semibold tracking-wide transition-colors py-1 ${
                       activeSection === item.href.slice(1)
                         ? 'text-accent'
-                        : 'text-txt-secondary hover:text-accent'
+                        : 'text-slate-600 hover:text-slate-950'
                     }`}
                   >
                     {item.label}
-                    <span
-                      className={`absolute -bottom-1 left-0 h-px bg-accent transition-all duration-300 ${
-                        activeSection === item.href.slice(1)
-                          ? 'w-full'
-                          : 'w-0'
-                      }`}
-                    />
+                    {activeSection === item.href.slice(1) && (
+                      <motion.span
+                        layoutId="nav-underline"
+                        className="absolute -bottom-1 left-0 right-0 h-[2px] bg-accent rounded-full"
+                      />
+                    )}
                   </a>
                 </li>
               ))}
@@ -97,29 +97,30 @@ export default function Navigation() {
               href="/Abdul_Basith_Maaz_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[10px] font-semibold tracking-[2px] uppercase text-accent border border-accent/25 hover:border-accent hover:bg-accent-dim px-3.5 py-1.5 rounded transition-all duration-300"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-800 bg-white border border-[#E8E2D8] hover:border-accent hover:text-accent px-4 py-2 rounded-full shadow-sm hover:shadow transition-all"
             >
-              Resume ↗
+              <span>Resume</span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
             </a>
           </div>
 
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden flex flex-col gap-[5px] p-1"
+            className="md:hidden flex flex-col gap-[5px] p-2 rounded-lg border border-[#E8E2D8] bg-white text-slate-800"
             aria-label="Toggle menu"
           >
             <motion.span
               animate={mobileOpen ? { rotate: 45, y: 6.5 } : { rotate: 0, y: 0 }}
-              className="block w-5 h-[1.5px] bg-txt-secondary origin-center"
+              className="block w-4 h-[1.5px] bg-slate-800 origin-center"
             />
             <motion.span
               animate={mobileOpen ? { opacity: 0 } : { opacity: 1 }}
-              className="block w-5 h-[1.5px] bg-txt-secondary"
+              className="block w-4 h-[1.5px] bg-slate-800"
             />
             <motion.span
               animate={mobileOpen ? { rotate: -45, y: -6.5 } : { rotate: 0, y: 0 }}
-              className="block w-5 h-[1.5px] bg-txt-secondary origin-center"
+              className="block w-4 h-[1.5px] bg-slate-800 origin-center"
             />
           </button>
         </div>
@@ -133,7 +134,7 @@ export default function Navigation() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="fixed top-14 left-0 right-0 z-[999] bg-surface-0/96 backdrop-blur-2xl border-b border-surface-3 p-6 space-y-4"
+            className="fixed top-16 left-0 right-0 z-[999] bg-[#FAF7F2]/98 backdrop-blur-xl border-b border-[#E8E2D8] p-6 shadow-xl space-y-4"
           >
             <div className="flex flex-col">
               {NAV_ITEMS.map((item) => (
@@ -141,7 +142,7 @@ export default function Navigation() {
                   key={item.href}
                   href={item.href}
                   onClick={closeMobile}
-                  className="block text-[12px] font-medium tracking-[1.5px] uppercase text-txt-secondary hover:text-accent py-3.5 border-b border-surface-3 last:border-0 transition-colors"
+                  className="block text-sm font-medium text-slate-700 hover:text-accent py-3 border-b border-[#E8E2D8]/60 last:border-0 transition-colors"
                 >
                   {item.label}
                 </a>
@@ -152,9 +153,10 @@ export default function Navigation() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={closeMobile}
-              className="block text-center text-[11px] font-semibold tracking-[2px] uppercase text-accent border border-accent/25 hover:border-accent hover:bg-accent-dim py-3 rounded transition-all duration-300"
+              className="flex items-center justify-center gap-1.5 text-xs font-semibold text-white bg-accent hover:bg-accent-600 py-3 rounded-xl shadow-md transition-all"
             >
-              Resume ↗
+              <span>View Resume (PDF)</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
           </motion.div>
         )}

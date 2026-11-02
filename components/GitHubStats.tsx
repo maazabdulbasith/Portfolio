@@ -104,19 +104,19 @@ function StatCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="glass-card accent-glow p-5 md:p-6"
+      className="bg-[#FAF7F2] border border-[#E8E2D8] rounded-2xl p-5 hover:border-slate-300 transition-all"
     >
       {loading ? (
         <div className="space-y-2 animate-pulse">
-          <div className="h-3 w-20 bg-surface-3 rounded" />
-          <div className="h-6 w-28 bg-surface-3 rounded" />
+          <div className="h-3 w-20 bg-slate-200 rounded" />
+          <div className="h-6 w-28 bg-slate-200 rounded" />
         </div>
       ) : (
         <>
-          <p className="text-[10px] font-semibold tracking-[2px] uppercase text-txt-tertiary mb-1.5">
+          <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
             {label}
           </p>
-          <p className="text-base md:text-lg font-semibold text-txt-primary leading-snug">
+          <p className="text-lg font-bold text-slate-900 leading-snug">
             {value ?? '—'}
           </p>
         </>
@@ -131,14 +131,14 @@ export default function GitHubStats() {
   const stats = useGitHubStats(username)
 
   const explicitTheme = {
-    light: ['#161616', 'rgba(245, 166, 35, 0.2)', 'rgba(245, 166, 35, 0.4)', 'rgba(245, 166, 35, 0.65)', 'rgba(245, 166, 35, 0.9)'],
-    dark: ['#161616', 'rgba(245, 166, 35, 0.2)', 'rgba(245, 166, 35, 0.4)', 'rgba(245, 166, 35, 0.65)', 'rgba(245, 166, 35, 0.9)'],
+    light: ['#F4EFEA', '#FCE2DE', '#FACAC2', '#EE7766', '#E0533C'],
+    dark: ['#F4EFEA', '#FCE2DE', '#FACAC2', '#EE7766', '#E0533C'],
   }
 
   return (
     <div>
       {/* Stat cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-10">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-8">
         <StatCard label="Repositories" value={stats.repoCount} loading={stats.loading} delay={0} />
         <StatCard label="Top Languages" value={stats.topLanguages} loading={stats.loading} delay={0.08} />
         <StatCard label="Latest Tech" value={stats.latestTech} loading={stats.loading} delay={0.16} />
@@ -150,18 +150,18 @@ export default function GitHubStats() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ delay: 0.2, duration: 0.6 }}
-        className="glass-card p-5 md:p-6 overflow-x-auto [&_article]:!text-txt-primary"
+        className="bg-[#FAF7F2] border border-[#E8E2D8] rounded-2xl p-5 md:p-6 overflow-x-auto"
       >
-        <p className="text-[10px] font-semibold tracking-[2px] uppercase text-txt-tertiary mb-4">
+        <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-4">
           Contribution Activity
         </p>
 
-        <div className="flex justify-center min-h-[140px] text-txt-primary">
+        <div className="flex justify-center min-h-[140px] text-slate-900">
           <GitHubCalendar 
             username={username} 
             theme={explicitTheme}
-            colorScheme="dark"
-            blockSize={11}
+            colorScheme="light"
+            blockSize={12}
             blockMargin={4}
             fontSize={12}
           />

@@ -4,8 +4,8 @@ import React from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { 
-  ExternalLink, ShieldCheck, Zap, Layers, Sparkles, 
-  Terminal, Cpu, ArrowUpRight, CheckCircle2, Lock, Eye
+  ArrowUpRight, CheckCircle2, Lock, Terminal, 
+  Sparkles, ShieldCheck, Zap
 } from 'lucide-react'
 
 interface FlagshipSystem {
@@ -95,23 +95,23 @@ const FLAGSHIP_SYSTEMS: FlagshipSystem[] = [
 
 export default function FeaturedSystems() {
   return (
-    <section id="featured" className="py-20 md:py-28 border-t border-surface-3 relative scroll-mt-14">
+    <section id="featured" className="py-20 md:py-28 border-t border-[#E8E2D8] relative scroll-mt-16">
       {/* Background ambient lighting */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-accent/5 blur-[120px] rounded-full pointer-events-none -z-10" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[750px] h-[350px] bg-gradient-to-tr from-rose-100/40 via-amber-100/30 to-indigo-100/30 blur-[120px] rounded-full pointer-events-none -z-10" />
 
       <div className="max-w-[1100px] mx-auto px-5 md:px-10">
         {/* Section Header */}
         <div className="mb-14">
           <div className="flex items-center gap-2 mb-3">
-            <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-            <span className="text-[11px] font-mono uppercase tracking-[3px] text-accent font-semibold">
+            <span className="w-2.5 h-2.5 rounded-full bg-accent animate-pulse" />
+            <span className="text-xs font-bold uppercase tracking-wider text-accent font-sans">
               Proof of Work · Live Demonstrations
             </span>
           </div>
-          <h2 className="font-display text-section text-txt-primary leading-[1.05]">
-            FLAGSHIP SYSTEMS &amp; LIVE DEMOS
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.1]">
+            Flagship Systems &amp; Live Demos
           </h2>
-          <p className="text-sm md:text-base text-txt-secondary max-w-2xl mt-3 leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 max-w-2xl mt-3 leading-relaxed">
             Production software and interactive prototypes you can test right now. No waitlists, no credential walls, and no broken staging URLs.
           </p>
         </div>
@@ -130,48 +130,48 @@ export default function FeaturedSystems() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.6, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="group relative rounded-xl bg-surface-1/70 border border-surface-3 hover:border-surface-4 transition-all duration-300 overflow-hidden shadow-2xl backdrop-blur-md"
+                className="group relative rounded-3xl bg-white border border-[#E8E2D8] hover:border-slate-300 transition-all duration-300 overflow-hidden shadow-[0_10px_35px_rgba(28,25,23,0.04)] hover:shadow-[0_16px_45px_rgba(28,25,23,0.08)]"
               >
                 {/* Glow accent bar at top */}
                 <div 
-                  className={`h-[2px] w-full transition-all duration-500 ${
+                  className={`h-[3px] w-full transition-all duration-500 ${
                     isEmerald 
-                      ? 'bg-gradient-to-r from-emerald-500/0 via-emerald-400 to-emerald-500/0 opacity-70 group-hover:opacity-100' 
+                      ? 'bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-500' 
                       : isAmber
-                      ? 'bg-gradient-to-r from-accent/0 via-accent to-accent/0 opacity-70 group-hover:opacity-100'
-                      : 'bg-gradient-to-r from-blue-500/0 via-blue-400 to-blue-500/0 opacity-70 group-hover:opacity-100'
+                      ? 'bg-gradient-to-r from-accent via-rose-400 to-accent'
+                      : 'bg-gradient-to-r from-indigo-500 via-violet-500 to-indigo-600'
                   }`}
                 />
 
-                <div className="p-6 md:p-9">
+                <div className="p-6 sm:p-9 md:p-10">
                   {/* Card Header */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                     <div>
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-display text-3xl md:text-4xl tracking-wide text-txt-primary group-hover:text-accent transition-colors">
+                      <div className="flex flex-wrap items-center gap-3 mb-2">
+                        <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-slate-900 group-hover:text-accent transition-colors">
                           {system.name}
                         </h3>
                         
                         {/* Live Status Badge */}
                         <span 
-                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider ${
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide ${
                             isEmerald
-                              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                               : isAmber
-                              ? 'bg-accent-dim text-accent border border-accent/25'
-                              : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                              ? 'bg-rose-50 text-accent border border-rose-200'
+                              : 'bg-indigo-50 text-indigo-700 border border-indigo-200'
                           }`}
                         >
                           <span 
-                            className={`w-1.5 h-1.5 rounded-full animate-ping ${
-                              isEmerald ? 'bg-emerald-400' : isAmber ? 'bg-accent' : 'bg-blue-400'
+                            className={`w-2 h-2 rounded-full animate-ping ${
+                              isEmerald ? 'bg-emerald-500' : isAmber ? 'bg-accent' : 'bg-indigo-500'
                             }`} 
                           />
                           {system.statusBadge}
                         </span>
                       </div>
                       
-                      <p className="text-xs font-mono uppercase tracking-wider text-txt-tertiary">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
                         {system.category}
                       </p>
                     </div>
@@ -183,7 +183,7 @@ export default function FeaturedSystems() {
                           href={system.liveUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 text-xs font-semibold tracking-wider uppercase px-4 py-2.5 rounded-md text-bg bg-accent border border-accent hover:bg-transparent hover:text-accent transition-all duration-300 shadow-[0_0_15px_rgba(245,166,35,0.2)]"
+                          className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-4 py-2.5 rounded-xl text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-[0_4px_14px_rgba(5,150,105,0.25)] hover:shadow-[0_6px_20px_rgba(5,150,105,0.35)] transition-all"
                         >
                           <span>Launch Live App</span>
                           <ArrowUpRight className="w-3.5 h-3.5" />
@@ -192,10 +192,16 @@ export default function FeaturedSystems() {
 
                       <Link
                         href={system.demoUrl}
-                        className="inline-flex items-center gap-2 text-xs font-semibold tracking-wider uppercase px-4 py-2.5 rounded-md text-txt-primary bg-surface-2/80 border border-surface-3 hover:border-accent hover:text-accent transition-all duration-300"
+                        className={`inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-4 py-2.5 rounded-xl transition-all ${
+                          !system.liveUrl
+                            ? isAmber
+                              ? 'text-white bg-gradient-to-r from-accent to-[#cb3720] hover:from-[#cb3720] hover:to-accent shadow-[0_4px_14px_rgba(224,83,60,0.25)]'
+                              : 'text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 shadow-[0_4px_14px_rgba(79,70,229,0.25)]'
+                            : 'text-slate-700 bg-[#FAF7F2] border border-[#E8E2D8] hover:border-slate-400 hover:bg-white'
+                        }`}
                       >
                         <span>Interactive Demo</span>
-                        <ArrowUpRight className="w-3.5 h-3.5 text-txt-tertiary" />
+                        <ArrowUpRight className="w-3.5 h-3.5" />
                       </Link>
 
                       {system.githubUrl && (
@@ -203,7 +209,7 @@ export default function FeaturedSystems() {
                           href={system.githubUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center p-2.5 rounded-md text-txt-tertiary hover:text-txt-primary border border-surface-3 hover:border-surface-4 transition-all"
+                          className="inline-flex items-center justify-center p-2.5 rounded-xl text-slate-500 hover:text-slate-900 bg-[#FAF7F2] border border-[#E8E2D8] hover:border-slate-400 transition-all"
                           title="View GitHub Repository"
                         >
                           <Terminal className="w-4 h-4" />
@@ -213,21 +219,21 @@ export default function FeaturedSystems() {
                   </div>
 
                   {/* Tagline */}
-                  <p className="text-sm md:text-base text-txt-secondary font-light leading-relaxed mb-6">
+                  <p className="text-base text-slate-600 leading-relaxed mb-6 font-normal">
                     {system.tagline}
                   </p>
 
                   {/* Telemetry Chips Strip */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-7">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-7">
                     {system.metrics.map((metric, mIdx) => (
                       <div 
                         key={mIdx}
-                        className="bg-surface-0/60 border border-surface-3 rounded-lg p-2.5 sm:p-3 text-center transition-colors group-hover:border-surface-4"
+                        className="bg-[#FAF7F2] border border-[#E8E2D8] rounded-xl p-3 text-center transition-colors group-hover:border-slate-300"
                       >
-                        <div className="text-[10px] font-mono uppercase tracking-wider text-txt-tertiary mb-1">
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">
                           {metric.label}
                         </div>
-                        <div className="text-sm sm:text-base font-semibold font-mono text-txt-primary">
+                        <div className="text-base font-extrabold font-mono text-slate-900">
                           {metric.value}
                         </div>
                       </div>
@@ -235,10 +241,10 @@ export default function FeaturedSystems() {
                   </div>
 
                   {/* Highlight Bullets */}
-                  <ul className="space-y-2.5 mb-7">
+                  <ul className="space-y-3 mb-7">
                     {system.highlights.map((bullet, bIdx) => (
-                      <li key={bIdx} className="flex items-start gap-2.5 text-xs sm:text-[13px] text-txt-secondary leading-relaxed">
-                        <CheckCircle2 className="w-4 h-4 text-accent/80 shrink-0 mt-0.5" />
+                      <li key={bIdx} className="flex items-start gap-3 text-sm text-slate-600 leading-relaxed">
+                        <CheckCircle2 className="w-4 h-4 text-accent shrink-0 mt-0.5" />
                         <span>{bullet}</span>
                       </li>
                     ))}
@@ -246,21 +252,21 @@ export default function FeaturedSystems() {
 
                   {/* Confidential Notice (If Applicable) */}
                   {system.confidentialNotice && (
-                    <div className="mb-6 px-3.5 py-2.5 rounded-md bg-surface-0/80 border border-surface-3/80 flex items-center gap-2.5 text-[11px] font-mono text-txt-tertiary">
-                      <Lock className="w-3.5 h-3.5 text-accent/70 shrink-0" />
+                    <div className="mb-6 px-4 py-3 rounded-xl bg-amber-50/70 border border-amber-200/80 flex items-center gap-2.5 text-xs font-medium text-amber-800">
+                      <Lock className="w-4 h-4 text-amber-600 shrink-0" />
                       <span>{system.confidentialNotice}</span>
                     </div>
                   )}
 
                   {/* Tech Stack Pills */}
-                  <div className="flex flex-wrap items-center gap-1.5 pt-4 border-t border-surface-3/60">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-txt-tertiary mr-2">
+                  <div className="flex flex-wrap items-center gap-2 pt-5 border-t border-[#E8E2D8]/80">
+                    <span className="text-xs font-semibold text-slate-400 mr-1">
                       Stack:
                     </span>
                     {system.techStack.map((tech) => (
                       <span 
                         key={tech}
-                        className="text-[11px] font-mono text-txt-secondary bg-surface-0/80 border border-surface-3 px-2.5 py-1 rounded hover:text-accent hover:border-accent/30 transition-colors"
+                        className="text-xs font-medium text-slate-700 bg-[#FAF7F2] border border-[#E8E2D8] px-3 py-1 rounded-full hover:border-slate-400 transition-colors"
                       >
                         {tech}
                       </span>

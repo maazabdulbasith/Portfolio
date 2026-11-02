@@ -3,21 +3,21 @@
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════
-   DESIGN TOKENS
+   DESIGN TOKENS — WARM EDITORIAL & LIVELY
    ═══════════════════════════════════════════════════ */
 :root {
-  --bg: #0a0a0a;
-  --bg-elevated: #111111;
-  --bg-surface: #161616;
-  --accent: #F5A623;
-  --accent-dim: rgba(245, 166, 35, 0.10);
-  --accent-border: rgba(245, 166, 35, 0.22);
-  --accent-glow: rgba(245, 166, 35, 0.15);
-  --text-primary: #e8e8e8;
-  --text-secondary: #888888;
-  --text-tertiary: #555555;
-  --border: #1a1a1a;
-  --border-hover: #2a2a2a;
+  --bg: #FAF7F2;
+  --bg-elevated: #FFFFFF;
+  --bg-surface: #F4EFEA;
+  --accent: #E0533C;
+  --accent-dim: rgba(224, 83, 60, 0.08);
+  --accent-border: rgba(224, 83, 60, 0.25);
+  --accent-glow: rgba(224, 83, 60, 0.16);
+  --text-primary: #1C1917;
+  --text-secondary: #475569;
+  --text-tertiary: #94A3B8;
+  --border: #E8E2D8;
+  --border-hover: #D4CCC0;
 }
 
 /* ═══════════════════════════════════════════════════
@@ -42,16 +42,12 @@
   }
 
   ::selection {
-    background: var(--accent);
-    color: var(--bg);
+    background: #FCE2DE;
+    color: #752216;
   }
 
   a {
-    @apply transition-opacity duration-200;
-  }
-
-  a:hover {
-    opacity: 0.75;
+    @apply transition-colors duration-200;
   }
 }
 
@@ -59,13 +55,12 @@
    COMPONENTS
    ═══════════════════════════════════════════════════ */
 @layer components {
-  /* Glassmorphic card — dark variant */
+  /* Editorial card — crisp white with soft warm shadow */
   .glass-card {
-    background: rgba(17, 17, 17, 0.6);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: #FFFFFF;
     border: 1px solid var(--border);
-    @apply rounded-lg;
+    box-shadow: 0 10px 30px -5px rgba(28, 25, 23, 0.04), 0 4px 6px -2px rgba(28, 25, 23, 0.02);
+    @apply rounded-2xl;
   }
 
   .glass-card:hover {
@@ -78,14 +73,15 @@
   }
 
   .accent-glow:hover {
-    box-shadow: 0 0 20px var(--accent-glow), 0 0 40px rgba(245, 166, 35, 0.05);
+    box-shadow: 0 12px 35px -5px rgba(224, 83, 60, 0.12);
     border-color: var(--accent-border) !important;
   }
 
   /* Section number — large decorative */
   .section-num {
-    font-family: 'Bebas Neue', sans-serif;
-    color: var(--accent-dim);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-weight: 800;
+    color: rgba(224, 83, 60, 0.08);
     line-height: 1;
     pointer-events: none;
     user-select: none;
@@ -93,29 +89,36 @@
 
   /* Callout badge */
   .callout-badge {
-    @apply inline-flex items-center text-xs font-semibold tracking-wider uppercase px-2.5 py-1 rounded;
-    background: var(--accent-dim);
-    color: var(--accent);
-    border: 1px solid var(--accent-border);
+    @apply inline-flex items-center text-xs font-semibold tracking-wider uppercase px-3 py-1 rounded-full;
+    background: rgba(224, 83, 60, 0.08);
+    color: #E0533C;
+    border: 1px solid rgba(224, 83, 60, 0.22);
   }
 
   .callout-badge.blue {
-    background: rgba(100, 180, 255, 0.08);
-    color: #64b4ff;
-    border-color: rgba(100, 180, 255, 0.2);
+    background: rgba(79, 70, 229, 0.08);
+    color: #4F46E5;
+    border-color: rgba(79, 70, 229, 0.22);
+  }
+
+  .callout-badge.emerald {
+    background: rgba(5, 150, 105, 0.08);
+    color: #059669;
+    border-color: rgba(5, 150, 105, 0.22);
   }
 
   /* Skill tag */
   .skill-tag {
-    @apply text-xs font-medium px-3.5 py-1.5 rounded border transition-all duration-250 cursor-default;
+    @apply text-xs font-medium px-3.5 py-1.5 rounded-full border transition-all duration-200 cursor-default bg-white;
     color: var(--text-secondary);
     border-color: var(--border);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
   }
 
   .skill-tag:hover {
-    color: var(--accent);
-    border-color: var(--accent-border);
-    background: var(--accent-dim);
+    color: #E0533C;
+    border-color: rgba(224, 83, 60, 0.35);
+    background: rgba(224, 83, 60, 0.05);
   }
 
   /* Accent left-border card */
@@ -133,6 +136,7 @@
   .timeline-dot {
     @apply absolute -left-[5px] top-9 w-2 h-2 rounded-full;
     background: var(--accent);
+    box-shadow: 0 0 0 4px #FAF7F2;
   }
 }
 
@@ -171,24 +175,24 @@
    SCROLLBAR
    ═══════════════════════════════════════════════════ */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg);
+  background: #FAF7F2;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-hover);
-  border-radius: 3px;
+  background: #D8D2C6;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-tertiary);
+  background: #B8B0A2;
 }
 
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--border-hover) var(--bg);
+  scrollbar-color: #D8D2C6 #FAF7F2;
 }
