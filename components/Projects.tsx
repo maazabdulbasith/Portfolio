@@ -71,9 +71,9 @@ const PERSONAL_PROJECTS: Project[] = [
     badgeType: 'amber',
     tech: 'FastAPI · Next.js · pgvector · LangGraph · LlamaIndex',
     bullets: [
-      'Built a local-first screenshot search engine that fuses OCR full-text, bge text embeddings, and CLIP image embeddings in pgvector with reciprocal rank fusion (RRF) and reranking. Hybrid recall@5 reached 1.0 and MRR 0.9028 on 12 golden queries (full-text alone 0.833).',
-      'Engineered LangGraph ingestion state machine and LlamaIndex-grounded Ask synthesizer citing exact screenshot evidence while refusing thin evidence and adversarial prompt injections.',
-      'Shipped in public beta as both a standalone web application (theonlyshelf.vercel.app) and an interactive mathematical decomposition demo with zero-knowledge client privacy.',
+      'Shipped a privacy-first screenshot search product that runs 100% on-device or at about 200 ms per image, with a dual-engine pipeline: WebAssembly OCR (Tesseract.js) and serverless Gemini 2.5 Flash vision (6 parallel workers) extracting text, captions, and 15+ semantic tags.',
+      'Raised Recall@5 to 1.000 and MRR to 0.903 (full-text baseline 0.833, 12-query benchmark) by fusing OCR full-text, bge-small text embeddings, and CLIP image embeddings in PostgreSQL pgvector with Reciprocal Rank Fusion (k=60), plus a client-side semantic synonym engine.',
+      'Hardened answers against prompt injection and thin evidence (keyless CI gate, action precision 1.0) using a LangGraph ingestion state machine and a LlamaIndex-grounded synthesizer that cites exact on-image text; added File System Access, ClipboardItem, and Web Share APIs.',
     ],
   },
 ]
