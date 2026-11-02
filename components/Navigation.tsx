@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const NAV_ITEMS = [
-  { label: 'Profile', href: '#about' },
+  { label: 'Live Systems', href: '#featured' },
   { label: 'Experience', href: '#work' },
-  { label: 'Education', href: '#education' },
-  { label: 'Projects', href: '#projects' },
+  { label: 'All Projects', href: '#projects' },
+  { label: 'Skills & Bio', href: '#about' },
   { label: 'GitHub', href: '#github' },
 ]
 
@@ -24,7 +24,7 @@ export default function Navigation() {
       if (NAV_ITEMS.map((item) => item.href.slice(1)).includes(hash)) {
         setActiveSection(hash)
       } else {
-        setActiveSection('about') // Default to profile/about
+        setActiveSection('featured')
       }
     }
 
@@ -61,9 +61,10 @@ export default function Navigation() {
               window.dispatchEvent(new Event('hashchange'))
               window.scrollTo({ top: 0, behavior: 'smooth' })
             }}
-            className="font-display text-xl tracking-[2px] text-txt-primary hover:opacity-100"
+            className="font-display text-xl tracking-[2px] text-txt-primary hover:opacity-100 flex items-center gap-1.5"
           >
-            MAA<span className="text-accent">Z</span>
+            <span>MAA<span className="text-accent">Z</span></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-accent/80 animate-pulse hidden sm:inline-block" />
           </a>
 
           {/* Desktop links */}
@@ -98,7 +99,7 @@ export default function Navigation() {
               rel="noopener noreferrer"
               className="text-[10px] font-semibold tracking-[2px] uppercase text-accent border border-accent/25 hover:border-accent hover:bg-accent-dim px-3.5 py-1.5 rounded transition-all duration-300"
             >
-              Resume
+              Resume ↗
             </a>
           </div>
 
@@ -153,7 +154,7 @@ export default function Navigation() {
               onClick={closeMobile}
               className="block text-center text-[11px] font-semibold tracking-[2px] uppercase text-accent border border-accent/25 hover:border-accent hover:bg-accent-dim py-3 rounded transition-all duration-300"
             >
-              Resume
+              Resume ↗
             </a>
           </motion.div>
         )}

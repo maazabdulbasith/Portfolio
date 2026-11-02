@@ -57,9 +57,9 @@ const item = {
 export default function Hero() {
   const typedText = useTypewriter(
     [
-      'Backend Engineer',
-      'GenAI Engineer',
-      'AI/ML Engineer',
+      'Backend & GenAI Engineer',
+      'Agentic Systems Architect',
+      'Production Systems Engineer',
       'Software Development Engineer',
     ],
     70,
@@ -76,6 +76,14 @@ export default function Hero() {
           animate="show"
           className="space-y-1"
         >
+          {/* Availability pill */}
+          <motion.div variants={item} className="mb-2">
+            <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-[2px] bg-accent-dim text-accent border border-accent/25">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
+              Available for Backend &amp; GenAI Engineering Roles
+            </span>
+          </motion.div>
+
           {/* Name */}
           <motion.div variants={item}>
             <h1 className="font-display text-hero leading-[0.9]">
@@ -104,7 +112,7 @@ export default function Hero() {
           {/* Contact links */}
           <motion.div
             variants={item}
-            className="flex flex-wrap gap-x-4 gap-y-2 text-[11px] md:text-xs text-txt-tertiary pt-8"
+            className="flex flex-wrap gap-x-4 gap-y-2 text-[11px] md:text-xs text-txt-tertiary pt-6"
           >
             <a href="tel:+919901061725" className="hover:text-accent transition-colors">(+91) 9901061725</a>
             <span className="text-surface-4 hidden md:inline">·</span>
@@ -116,21 +124,51 @@ export default function Hero() {
           </motion.div>
 
           {/* CTA Buttons */}
-          <motion.div variants={item} className="pt-10 flex gap-4">
+          <motion.div variants={item} className="pt-8 flex flex-wrap gap-3.5">
+            <a
+              href="#featured"
+              className="text-[11px] font-semibold tracking-[2px] uppercase text-bg bg-accent border border-accent hover:bg-transparent hover:text-accent px-6 py-3.5 rounded transition-all duration-300 shadow-[0_0_20px_rgba(245,166,35,0.25)] flex items-center gap-2"
+            >
+              <span>Explore Live Systems</span>
+              <span className="text-xs">⚡</span>
+            </a>
             <a
               href="/Abdul_Basith_Maaz_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[11px] font-semibold tracking-[2px] uppercase text-bg bg-accent border border-accent hover:bg-transparent hover:text-accent px-6 py-3.5 rounded transition-all duration-300"
+              className="text-[11px] font-semibold tracking-[2px] uppercase text-txt-primary border border-surface-3 hover:border-accent hover:text-accent px-6 py-3.5 rounded transition-all duration-300"
             >
-              View Resume
+              View Resume ↗
             </a>
             <a
               href="#work"
-              className="text-[11px] font-semibold tracking-[2px] uppercase text-txt-primary border border-surface-3 hover:border-accent px-6 py-3.5 rounded transition-all duration-300"
+              className="text-[11px] font-semibold tracking-[2px] uppercase text-txt-secondary hover:text-txt-primary border border-surface-3 px-6 py-3.5 rounded transition-all duration-300 hidden sm:inline-block"
             >
-              See My Work
+              Experience
             </a>
+          </motion.div>
+
+          {/* Quick Metrics Bar (Immediate Proof of Work) */}
+          <motion.div 
+            variants={item} 
+            className="pt-10 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-[850px]"
+          >
+            <div className="bg-surface-1/60 border border-surface-3 p-3.5 rounded-lg backdrop-blur-sm hover:border-accent/30 transition-colors">
+              <div className="text-accent font-display text-2xl tracking-wide">50K+</div>
+              <div className="text-[10px] uppercase font-mono tracking-wider text-txt-tertiary">Active Users (Khayyal)</div>
+            </div>
+            <div className="bg-surface-1/60 border border-surface-3 p-3.5 rounded-lg backdrop-blur-sm hover:border-accent/30 transition-colors">
+              <div className="text-accent font-display text-2xl tracking-wide">1.000</div>
+              <div className="text-[10px] uppercase font-mono tracking-wider text-txt-tertiary">Recall@5 (Shelf pgvector)</div>
+            </div>
+            <div className="bg-surface-1/60 border border-surface-3 p-3.5 rounded-lg backdrop-blur-sm hover:border-accent/30 transition-colors">
+              <div className="text-accent font-display text-2xl tracking-wide">~600ms</div>
+              <div className="text-[10px] uppercase font-mono tracking-wider text-txt-tertiary">Client WASM Vision</div>
+            </div>
+            <div className="bg-surface-1/60 border border-surface-3 p-3.5 rounded-lg backdrop-blur-sm hover:border-accent/30 transition-colors">
+              <div className="text-accent font-display text-2xl tracking-wide">ZATCA 2</div>
+              <div className="text-[10px] uppercase font-mono tracking-wider text-txt-tertiary">ECDSA Crypto Ledger</div>
+            </div>
           </motion.div>
         </motion.div>
       </div>

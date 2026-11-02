@@ -7,34 +7,49 @@ interface Project {
   url?: string
   demoUrl?: string
   badge: string
-  badgeType?: 'amber' | 'blue'
+  badgeType?: 'amber' | 'blue' | 'emerald'
   tech: string
   bullets: string[]
 }
 
 const PRODUCTION_PROJECTS: Project[] = [
   {
-    name: 'AI Mock Interview Platform',
-    url: '/demos/ai-interview',
-    badge: 'Live Demo',
-    badgeType: 'blue',
-    tech: 'Next.js · MediaPipe · Whisper · Parakeet · Gemini',
+    name: 'Shelf',
+    url: 'https://theonlyshelf.vercel.app',
+    demoUrl: '/demos/shelf',
+    badge: 'Live Product · Public Beta',
+    badgeType: 'emerald',
+    tech: 'FastAPI · Next.js · PostgreSQL / pgvector · LangGraph · LlamaIndex · Tesseract.js WASM · Gemini 2.5 Flash',
     bullets: [
-      'Built video and audio pipelines that extract facial and pose signals and generate structured interview feedback using Gemini.',
-      'Moved MediaPipe processing from server to browser, reducing processing time from approximately 60 seconds to 5–6 seconds while lowering server load and bandwidth usage.',
-      'Integrated Whisper and Parakeet transcription and added Redis caching, reducing repeated pipeline-loading time by 50%.',
+      'Shipped a privacy-first screenshot & photo search product running 100% on-device or at ~200ms serverless speed, with a dual-engine pipeline: WebAssembly OCR (Tesseract.js at 750px downscale) and serverless Gemini 2.5 Flash vision (6 parallel workers) extracting text, captions, and 15+ visual tags.',
+      'Raised Recall@5 to 1.000 and MRR to 0.903 (full-text baseline 0.833, 12-query benchmark) by fusing OCR full-text, bge-small text embeddings, and CLIP image embeddings in PostgreSQL pgvector with Reciprocal Rank Fusion (k=60), plus a client-side semantic synonym engine.',
+      'Hardened answers against prompt injection and thin evidence (keyless CI gate, action precision 1.0) using a LangGraph ingestion state machine and a LlamaIndex-grounded synthesizer citing exact on-image text.',
     ],
   },
   {
     name: 'Wakat',
-    url: 'https://dev.wakat.me',
+    url: '/demos/wakat',
     demoUrl: '/demos/wakat',
-    badge: 'Live Product',
+    badge: 'Enterprise Case Study · Interactive Sandbox',
     badgeType: 'amber',
-    tech: 'Django · Celery · React · PostgreSQL',
+    tech: 'Django · Celery · PostgreSQL · React · ECDSA secp256k1 · UBL 2.1 XML',
     bullets: [
-      'Shipped a multi-tenant ZATCA Phase 2 e-invoicing and accounting platform for Saudi businesses, generating UBL XML invoices with per-device hash chains, ECDSA signatures, and nine-tag TLV QR codes, and submitting them to ZATCA\'s Fatoora platform for clearance and reporting.',
+      'Shipped a multi-tenant ZATCA Phase 2 e-invoicing and accounting platform for Saudi businesses, generating UBL XML invoices with per-device SHA-256 hash chains, ECDSA signatures, and nine-tag TLV QR codes, submitting them to ZATCA\'s Fatoora platform for clearance and reporting.',
       'Built the surrounding books in Django and Celery — subscriptions, purchases, chart of accounts, journals, VAT returns, and payroll — with a React app handling onboarding, device management, and CSID lifecycle.',
+      'Sanitized proprietary enterprise architecture into an interactive in-browser cryptographic verification sandbox for technical inspection.',
+    ],
+  },
+  {
+    name: 'AI Mock Interview Platform',
+    url: '/demos/ai-interview',
+    demoUrl: '/demos/ai-interview',
+    badge: 'Interactive Demo · Client-Side CV',
+    badgeType: 'blue',
+    tech: 'Next.js · MediaPipe WASM · Whisper · Parakeet · Gemini · Redis',
+    bullets: [
+      'Built video and audio pipelines that extract facial, pose, and acoustic signals to generate structured interview feedback using Gemini.',
+      'Moved MediaPipe processing from server to browser Web Workers, reducing processing time from approximately 60 seconds to 5–6 seconds while cutting server egress to zero.',
+      'Integrated Whisper and Parakeet transcription and added Redis caching, reducing repeated pipeline-loading compute by 50%.',
     ],
   },
 ]
@@ -63,19 +78,6 @@ const PERSONAL_PROJECTS: Project[] = [
       'Implemented viewport-prioritized batched DOM scanning, animated scan/caret selection overlays, and an instant non-destructive "Show Original" hover interaction.',
     ],
   },
-  {
-    name: 'Shelf',
-    url: 'https://theonlyshelf.vercel.app',
-    demoUrl: '/demos/shelf',
-    badge: 'Live Product · Beta',
-    badgeType: 'amber',
-    tech: 'FastAPI · Next.js · pgvector · LangGraph · LlamaIndex',
-    bullets: [
-      'Shipped a privacy-first screenshot search product that runs 100% on-device or at about 200 ms per image, with a dual-engine pipeline: WebAssembly OCR (Tesseract.js) and serverless Gemini 2.5 Flash vision (6 parallel workers) extracting text, captions, and 15+ semantic tags.',
-      'Raised Recall@5 to 1.000 and MRR to 0.903 (full-text baseline 0.833, 12-query benchmark) by fusing OCR full-text, bge-small text embeddings, and CLIP image embeddings in PostgreSQL pgvector with Reciprocal Rank Fusion (k=60), plus a client-side semantic synonym engine.',
-      'Hardened answers against prompt injection and thin evidence (keyless CI gate, action precision 1.0) using a LangGraph ingestion state machine and a LlamaIndex-grounded synthesizer that cites exact on-image text; added File System Access, ClipboardItem, and Web Share APIs.',
-    ],
-  },
 ]
 
 const cardVariant = {
@@ -92,6 +94,10 @@ const cardVariant = {
 }
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
+  const isEmerald = project.badgeType === 'emerald'
+  const isBlue = project.badgeType === 'blue'
+  const isAmber = project.badgeType === 'amber'
+
   return (
     <motion.div
       custom={index}
@@ -102,11 +108,11 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       className="accent-border-card py-6"
     >
       {/* Header */}
-      <div className="flex flex-wrap items-center gap-2.5 mb-1.5">
+      <div className="flex flex-wrap items-center gap-2.5 mb-2">
         {project.url ? (
           <a
             href={project.url}
-            target="_blank"
+            target={project.url.startsWith('http') ? '_blank' : '_self'}
             rel="noopener noreferrer"
             className="text-[17px] font-semibold text-txt-primary hover:text-accent transition-colors inline-flex items-center gap-1.5 group"
           >
@@ -120,23 +126,34 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             {project.name}
           </span>
         )}
+
         {project.badge && (
           <span
-            className={`callout-badge text-[10px] ${
-              project.badgeType === 'blue' ? 'blue' : ''
+            className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[10px] font-mono font-semibold uppercase tracking-wider ${
+              isEmerald
+                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/25'
+                : isBlue
+                ? 'bg-blue-500/10 text-blue-400 border border-blue-500/25'
+                : 'callout-badge'
             }`}
           >
+            <span 
+              className={`w-1 h-1 rounded-full ${
+                isEmerald ? 'bg-emerald-400' : isBlue ? 'bg-blue-400' : 'bg-accent'
+              }`} 
+            />
             {project.badge}
           </span>
         )}
+
         {project.demoUrl && (
           <a
             href={project.demoUrl}
-            target="_blank"
+            target={project.demoUrl.startsWith('http') ? '_blank' : '_self'}
             rel="noopener noreferrer"
-            className="text-[11px] font-mono text-txt-tertiary hover:text-accent transition-colors border border-[#27272a] px-2 py-0.5 rounded hover:border-[#3f3f46]"
+            className="text-[11px] font-mono text-txt-tertiary hover:text-accent transition-colors border border-[#27272a] px-2.5 py-0.5 rounded hover:border-[#3f3f46]"
           >
-            {project.name === 'Shelf' ? 'Inspect RRF Architecture ↗' : 'Inspect Cryptographic Architecture ↗'}
+            {project.name === 'Shelf' ? 'Inspect RRF Architecture ↗' : project.name === 'Wakat' ? 'Cryptographic Sandbox ↗' : 'Launch In-Browser Demo ↗'}
           </a>
         )}
       </div>
@@ -169,7 +186,7 @@ export default function Projects() {
       <div>
         <div className="flex items-center justify-between border-b border-surface-3 pb-3 mb-1">
           <p className="text-[10px] font-semibold tracking-[2px] uppercase text-txt-tertiary">
-            Shipped &amp; Production Systems
+            Flagship &amp; Production Systems
           </p>
         </div>
         <div className="space-y-0">
@@ -187,14 +204,14 @@ export default function Projects() {
         <div className="flex flex-wrap items-baseline justify-between border-b border-surface-3 pb-3 mb-1 gap-2">
           <div>
             <h3 className="text-sm font-semibold tracking-[2px] uppercase text-accent">
-              &ldquo;Built because I wanted to&rdquo;
+              Independent Tools &amp; Products
             </h3>
             <p className="text-xs text-txt-tertiary mt-0.5">
-              Independent products built out of personal conviction to solve real gaps.
+              Consumer utilities built to solve specific workflow gaps.
             </p>
           </div>
           <span className="callout-badge text-[10px] blue">
-            Personal Products
+            Personal Projects
           </span>
         </div>
         <div className="space-y-0">
