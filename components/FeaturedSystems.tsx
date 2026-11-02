@@ -44,9 +44,9 @@ const FLAGSHIP_SYSTEMS: FlagshipSystem[] = [
     highlights: [
       'Dual-Engine Ingestion: Offloads privacy-critical OCR to client-side Tesseract.js WebAssembly (~600ms at 750px canvas downscale) or switches to serverless Gemini 2.5 Flash (6 parallel workers) for scene captions and 15+ visual tags (#family, #code, #receipt).',
       'Hybrid pgvector RRF: Fuses OCR full-text, CLIP embeddings, and bge-small text vectors in PostgreSQL pgvector via Reciprocal Rank Fusion (k=60), boosting MRR from 0.722 to 0.903 on 12-query benchmark set.',
-      'Hardened Agentic Synthesis: LangGraph ingestion state machine and LlamaIndex grounded synthesizer citing exact on-image text to prevent hallucination; enforces thin-evidence gates and keyless CI checks (precision 1.0).',
+      'Agentic Synthesis & CrewAI: LangGraph deterministic state machine for low-latency search paired with 3-agent CrewAI pipelines (Financial Specialist, Tax Auditor, Ledger Controller) that autonomously audit receipts and triage SRE errors.',
     ],
-    techStack: ['LangGraph', 'PostgreSQL / pgvector', 'Gemini 2.5 Flash', 'Tesseract.js WASM', 'FastAPI', 'Next.js 14'],
+    techStack: ['CrewAI', 'LangGraph', 'PostgreSQL / pgvector', 'Gemini 2.5 Flash', 'Tesseract.js WASM', 'FastAPI', 'Next.js 14'],
   },
   {
     id: 'wakat',

@@ -20,11 +20,11 @@ const PRODUCTION_PROJECTS: Project[] = [
     demoUrl: '/demos/shelf',
     badge: 'Live Product · Public Beta',
     badgeType: 'emerald',
-    tech: 'FastAPI · Next.js · PostgreSQL / pgvector · LangGraph · LlamaIndex · Tesseract.js WASM · Gemini 2.5 Flash',
+    tech: 'CrewAI · LangGraph · FastAPI · Next.js · PostgreSQL / pgvector · Tesseract.js WASM · Gemini 2.5 Flash',
     bullets: [
       'Shipped a privacy-first screenshot & photo search product running 100% on-device or at ~200ms serverless speed, with a dual-engine pipeline: WebAssembly OCR (Tesseract.js at 750px downscale) and serverless Gemini 2.5 Flash vision (6 parallel workers) extracting text, captions, and 15+ visual tags.',
       'Raised Recall@5 to 1.000 and MRR to 0.903 (full-text baseline 0.833, 12-query benchmark) by fusing OCR full-text, bge-small text embeddings, and CLIP image embeddings in PostgreSQL pgvector with Reciprocal Rank Fusion (k=60), plus a client-side semantic synonym engine.',
-      'Hardened answers against prompt injection and thin evidence (keyless CI gate, action precision 1.0) using a LangGraph ingestion state machine and a LlamaIndex-grounded synthesizer citing exact on-image text.',
+      'Built a hybrid agent architecture: deterministic LangGraph state machine for sub-second retrieval, paired with 3-agent CrewAI pipelines (Financial Document Specialist, Tax Auditor, Expense Controller) for autonomous visual receipt reconciliation and SRE incident triage.',
     ],
   },
   {
