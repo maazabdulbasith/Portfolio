@@ -9,72 +9,65 @@ interface SkillGroup {
 
 const SKILL_GROUPS: SkillGroup[] = [
   {
-    label: 'Backend & System Design',
+    label: 'Multi-Agent Systems',
+    skills: [
+      'CrewAI',
+      'AutoGPT (ReAct)',
+      'LangGraph',
+      'LlamaIndex Synthesizers',
+    ],
+  },
+  {
+    label: 'Retrieval & Vector DBs',
+    skills: [
+      'PostgreSQL pgvector',
+      'HNSW & IVFFlat Indexes',
+      'Reciprocal Rank Fusion (k=60)',
+      'Hybrid Search',
+      'Semantic Caching',
+      'FastEmbed ONNX',
+    ],
+  },
+  {
+    label: 'LLMs & Guardrails',
+    skills: [
+      'Gemini 2.5 Flash / Flash-Lite',
+      'Prompt Injection Defenses',
+      'Thin-Evidence Gating',
+      'Pydantic Structured Outputs',
+      'Token Budget Management',
+    ],
+  },
+  {
+    label: 'Backend & Cloud',
+    skills: [
+      'Python 3.12',
+      'FastAPI',
+      'Django REST Framework',
+      'Celery',
+      'Redis',
+      'WebAssembly (WASM)',
+      'Docker',
+      'AsyncIO',
+      'Linux Administration',
+      'GCP',
+      'Nginx',
+      'pytest',
+      'RESTful APIs',
+      'Git',
+    ],
+  },
+  {
+    label: 'Languages & Web',
     skills: [
       'Python',
-      'Django',
-      'Django REST Framework',
-      'FastAPI',
-      'REST APIs',
-      'JWT Authentication',
-      'Webhooks',
-      'Redis Caching',
-      'OpenAPI Spec',
-      'API Versioning',
-      'Microservices',
-      'Payment Gateways (Razorpay, STC Pay, Dhamen Pay)',
+      'TypeScript',
+      'JavaScript',
+      'SQL',
+      'React.js',
+      'Next.js 15',
+      'Tailwind CSS',
     ],
-  },
-  {
-    label: 'AI, Agents & Multimodal',
-    skills: [
-      'LangGraph',
-      'LlamaIndex',
-      'RAG & Hybrid Search',
-      'pgvector & Embeddings',
-      'Gemini 2.5 Flash',
-      'Claude 3.5 Sonnet',
-      'MediaPipe WASM',
-      'Whisper Audio Pipeline',
-      'Computer Vision',
-      'Prompt Injection Defenses',
-    ],
-  },
-  {
-    label: 'Databases & Storage',
-    skills: [
-      'PostgreSQL',
-      'pgvector',
-      'Reciprocal Rank Fusion (RRF)',
-      'Vector Search',
-      'SQL Optimization',
-      'MongoDB',
-    ],
-  },
-  {
-    label: 'Cloud, DevOps & Infrastructure',
-    skills: [
-      'Google Cloud Platform (GCP)',
-      'Docker',
-      'Jenkins',
-      'CI/CD Pipelines',
-      'Linux Server Administration',
-      'Git & GitHub Actions',
-    ],
-  },
-  {
-    label: 'Testing & Reliability',
-    skills: [
-      'pytest',
-      'Regression Testing',
-      'Integration Testing',
-      'Performance Profiling',
-      'Latency Optimization',
-    ],
-  },
-  {
-    label: 'Frontend & UI',
-    skills: ['TypeScript', 'JavaScript', 'React.js', 'Next.js 14', 'Tailwind CSS'],
   },
 ]
 
@@ -122,7 +115,7 @@ export default function About() {
           with production ownership across five SaaS products, including a
           FastAPI platform serving 50K+ users. Experienced in Django, FastAPI,
           PostgreSQL, Redis, payment integrations, GCP deployments, and
-          zero-downtime migrations.
+          zero-downtime migrations. Took the Waddi client-facing CRM from ideation to production as sole developer.
         </motion.p>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -131,7 +124,7 @@ export default function About() {
           transition={{ duration: 0.6, delay: 0.15 }}
           className="text-base font-normal leading-relaxed text-slate-600"
         >
-          Shipped ZATCA Phase 2 cryptographic e-invoicing for Saudi enterprise clients, and engineered Shelf — an agentic multimodal visual search product utilizing LangGraph, pgvector RRF, and on-device WebAssembly OCR.
+          Shipped ZATCA Phase 2 cryptographic e-invoicing for Saudi enterprise clients, and engineered Shelf — an agentic multimodal visual search product utilizing CrewAI, AutoGPT ReAct, LangGraph, pgvector RRF, and on-device WebAssembly OCR.
         </motion.p>
       </div>
 

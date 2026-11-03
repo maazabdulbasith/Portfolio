@@ -25,10 +25,10 @@ const EXPERIENCE: ExperienceItem[] = [
         text: 'Took sole backend ownership of Khayyal, a KSA SaaS platform serving 50K+ users; reverse-engineered and documented its FastAPI architecture after an engineer transition while maintaining zero downtime.',
         callout: '50k+ users · KSA',
       },
-      'Independently designed, built, and launched Waddi\'s client-facing CRM using React, TypeScript, Django REST Framework, and PostgreSQL.',
+      'Built and launched the Waddi client-facing CRM solo with React, TypeScript, Django REST Framework, and PostgreSQL.',
       'Fixed abandoned-checkout payment-state defects across Razorpay, STC Pay, and Dhamen Pay that falsely marked 25+ transactions unpaid per incident; added pytest regression tests to prevent recurrence.',
-      'Optimized OpenAPI schema generation with Redis-backed caching, reducing Swagger documentation load time from 5–10 seconds to under one second.',
-      'Leading the zero-downtime migration of 131 endpoints from FastAPI to Django, using API versioning to preserve existing client integrations.',
+      'Optimized OpenAPI schema generation with Redis caching, cutting Swagger docs load from 5-10 seconds to under 1 second.',
+      'Led the zero-downtime migration of 131 endpoints from FastAPI to Django, using API versioning to preserve client integrations.',
       'Owned CI/CD and GCP deployments across five SaaS products; standardized Linux log-triage workflows, reducing incident diagnosis from hours to minutes.',
     ],
   },
@@ -37,7 +37,7 @@ const EXPERIENCE: ExperienceItem[] = [
     company: 'IBM & Rooman Technologies Pvt. Ltd.',
     date: 'Sep 2024 – Mar 2025',
     bullets: [
-      'Implemented Jenkins CI/CD pipelines and Docker-based environments, reducing deployment setup overhead for a four-person development team.',
+      'Implemented Jenkins CI/CD pipelines and Docker environments, cutting deployment setup overhead for a four-person development team.',
     ],
   },
   {

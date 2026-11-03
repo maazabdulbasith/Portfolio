@@ -46,7 +46,7 @@ const FLAGSHIP_SYSTEMS: FlagshipSystem[] = [
       'Hybrid pgvector RRF: Fuses OCR full-text, CLIP embeddings, and bge-small text vectors in PostgreSQL pgvector via Reciprocal Rank Fusion (k=60), boosting MRR from 0.722 to 0.903 on 12-query benchmark set.',
       'Agentic Tri-Tier Architecture: LangGraph deterministic state machine for low-latency search paired with 3-agent CrewAI pipelines (Financial Specialist, Tax Auditor, Ledger Controller) and an autonomous AutoGPT ReAct loop (Thought, Reasoning, Plan, Criticism, Action) for open-ended visual investigations.',
     ],
-    techStack: ['AutoGPT ReAct', 'CrewAI', 'LangGraph', 'PostgreSQL / pgvector', 'Gemini 2.5 Flash', 'FastAPI', 'Next.js 14'],
+    techStack: ['AutoGPT ReAct', 'CrewAI', 'LangGraph', 'PostgreSQL / pgvector', 'Gemini 2.5 Flash', 'FastAPI', 'Next.js 15'],
   },
   {
     id: 'wakat',
@@ -89,7 +89,7 @@ const FLAGSHIP_SYSTEMS: FlagshipSystem[] = [
       'Acoustic Cache & Speech Analysis: Integrated Whisper and Parakeet transcription pipelines with Redis-backed caching, eliminating 50% of redundant audio compute on repeated segments.',
       'Telemetry Feedback Engine: Computes real-time gaze fixation, head yaw variance, emotional engagement ratios, and speech cadence to deliver structured candidate evaluation reports.',
     ],
-    techStack: ['Next.js 14', 'MediaPipe WASM', 'Whisper', 'Parakeet', 'Redis', 'Gemini'],
+    techStack: ['Next.js 15', 'MediaPipe WASM', 'Whisper', 'Parakeet', 'Redis', 'Gemini'],
   },
 ]
 
