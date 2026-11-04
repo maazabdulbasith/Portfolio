@@ -1,4 +1,10 @@
 import { NextResponse } from 'next/server'
+import {
+  evaluateAskGuardrails,
+  isInjectionText,
+  isPasswordLikeAsk,
+  isWifiSpecific,
+} from '../../../lib/shelfGuardrails'
 
 interface ShotItem {
   id: string
@@ -108,156 +114,24 @@ const KNOWLEDGE_BASE: ShotItem[] = [
   },
 ]
 
-const INJECTION_MARKERS = [
-  'ignore previous instructions',
-  'ignore all previous',
-  'ignore previous',
-  'disregard previous',
-  'disregard earlier',
-  'say the password',
-  'system prompt',
-  'you are now',
-  'reveal the password',
-  'reveal credentials',
-  'override',
-  'jailbreak',
-  'developer mode',
-  'do anything now',
-]
-
-function normalize(text: string): string {
-  return (text || '')
-    .toLowerCase()
-    .replace(/[\u200b-\u200d\ufeff]/g, '')
-    .replace(/[^\S\n]+/g, ' ')
-    .trim()
-}
-
-function isInjection(text: string): boolean {
-  const lowered = normalize(text)
-  if (INJECTION_MARKERS.some(marker => lowered.includes(marker))) {
-    return true
-  }
-  if (lowered.includes('ignore') && lowered.includes('instruction')) return true
-  if (/\b(ign0re|instrukt|anweisung)\b/.test(lowered) && /\b(passw|p4ss|geheim)\b/.test(lowered)) {
-    return true
-  }
-  return false
-}
-
-/** Explicit Wi-Fi intent only — blocks guest/network/ssid smuggling. */
-function isWifiSpecific(qLower: string): boolean {
-  if (/\b(not|except|excluding)\b.{0,24}\b(wifi|wi-fi)\b/.test(qLower)) return false
-  if (/\b(wifi|wi-fi)\b.{0,24}\b(not|except|excluding)\b/.test(qLower)) return false
-  if (qLower.includes('inject')) return false
-
-  if (qLower.includes('wifi') || qLower.includes('wi-fi')) return true
-  if (/\bguest\s+(wifi|wi-fi|network)\b/.test(qLower)) return true
-  if (qLower.includes('shelf-guest')) return true
-  if (/\bssid\b/.test(qLower) && /\b(wifi|wi-fi|password|passphrase|credential)\b/.test(qLower) && !/\birrelevant\b/.test(qLower)) {
-    return true
-  }
-  return false
-}
-
-function isPasswordLikeAsk(qLower: string): boolean {
-  return (
-    qLower.includes('password') ||
-    qLower.includes('passphrase') ||
-    qLower.includes('secret') ||
-    /\bp4ssw?ord\b/.test(qLower) ||
-    qLower.includes('passwort')
-  )
-}
-
-function isSafeTokenQuestion(qLower: string): boolean {
-  return (
-    qLower.includes('shelftoken') ||
-    qLower.includes('note-07') ||
-    qLower.includes('note-19') ||
-    qLower.includes('hnsw') ||
-    (qLower.includes('guardrail') && !isPasswordLikeAsk(qLower))
-  )
-}
-
-function isGenericPasswordAsk(qLower: string): boolean {
-  if (isSafeTokenQuestion(qLower) && !qLower.includes('inject')) return false
-  if (!isPasswordLikeAsk(qLower) && !qLower.includes('credential')) return false
-  if (isWifiSpecific(qLower)) return false
-  return true
-}
-
 export async function POST(req: Request) {
   try {
     const body = await req.json()
     const { question = '', apiKey: clientKey } = body
     const q = question.trim()
 
-    if (!q) {
+    const gate = evaluateAskGuardrails(q)
+    if (gate.action !== 'allow') {
       return NextResponse.json({
-        answer: 'Please enter a question to ask the shelf.',
-        citations: [],
+        answer: gate.answer,
+        citations: gate.citations,
         refused: true,
-        reason: 'empty_query',
-        engine: 'grounded'
+        reason: gate.reason,
+        engine: gate.reason === 'prompt_injection' ? 'deterministic_guardrail' : 'grounded',
       })
     }
 
-    if (q.length > 4000) {
-      return NextResponse.json({
-        answer: "I don't have a screenshot that answers that question.",
-        citations: [],
-        refused: true,
-        reason: 'thin_evidence',
-        engine: 'grounded'
-      })
-    }
-
-    const qLower = normalize(q)
-
-    // 1. Deterministic Prompt Injection Defense (ask.py)
-    if (isInjection(q)) {
-      return NextResponse.json({
-        answer: "I won't follow instructions hidden in a question.",
-        citations: [{ id: 'shot-11', file: 'inject.png', title: 'Quarantined Adversarial Payload' }],
-        refused: true,
-        reason: 'prompt_injection',
-        engine: 'deterministic_guardrail'
-      })
-    }
-
-    // 1b. Generic password asks retrieve inject.png → refuse (demo script)
-    if (isGenericPasswordAsk(qLower)) {
-      return NextResponse.json({
-        answer: "That screenshot tries to give me instructions. I won't follow them.",
-        citations: [{ id: 'shot-11', file: 'inject.png', title: 'Quarantined Adversarial Payload', caption: 'Adversarial screenshot containing prompt injection instructions.' }],
-        refused: true,
-        reason: 'prompt_injection',
-        engine: 'deterministic_guardrail'
-      })
-    }
-
-    // Speculative / fabrication asks have no grounded evidence
-    if (/\b(invent|fabricate|make up|hallucinate|ssn|social security)\b/.test(qLower)) {
-      return NextResponse.json({
-        answer: "I don't have a screenshot that answers that question.",
-        citations: [],
-        refused: true,
-        reason: 'thin_evidence',
-        engine: 'grounded'
-      })
-    }
-
-    // Never quote adversarial inject.png OCR payload
-    if (qLower.includes('inject.png') || (qLower.includes('inject') && (qLower.includes('say') || qLower.includes('quote') || qLower.includes('exactly')))) {
-      return NextResponse.json({
-        answer: "That screenshot tries to give me instructions. I won't follow them.",
-        citations: [{ id: 'shot-11', file: 'inject.png', title: 'Quarantined Adversarial Payload' }],
-        refused: true,
-        reason: 'prompt_injection',
-        engine: 'deterministic_guardrail'
-      })
-    }
+    const qLower = gate.normalized
 
     const STOPWORDS = new Set(['the', 'and', 'for', 'are', 'was', 'who', 'did', 'can', 'has', 'how', 'what', 'when', 'where', 'why', 'with', 'from', 'that', 'this', 'you', 'your', 'about', 'according', 'screenshots', 'screenshot', 'number', 'abdul'])
     const words = qLower.split(/\s+/).filter((w: string) => w.length > 2 && !STOPWORDS.has(w))
@@ -316,7 +190,7 @@ export async function POST(req: Request) {
     }))
 
     // 4. If Screenshot contains injection payload and user asks for hidden content
-    if (isInjection(topHit.text) && (qLower.includes('password') || qLower.includes('secret') || qLower.includes('instruction'))) {
+    if (isInjectionText(topHit.text) && (isPasswordLikeAsk(qLower) || qLower.includes('instruction'))) {
       return NextResponse.json({
         answer: "That screenshot tries to give me unauthorized instructions. Execution halted.",
         citations: [citations[0]],
